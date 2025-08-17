@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Product</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f8f9fa; }
+    .form-container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .form-title {
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    button {
+      width: 100%;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2 class="form-title">Edit Product</h2>
+    <form action="/admin/update/<%= prod.id %>" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Product ID</label>
+        <input type="text" class="form-control" value="<%= prod.id %>" readonly>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Product Name</label>
+        <input type="text" class="form-control" name="name" value="<%= prod.name %>" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Price</label>
+        <input type="number" class="form-control" name="price" value="<%= prod.price %>" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Stock</label>
+        <input type="number" class="form-control" name="stock" value="<%= prod.stock %>" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Image URL</label>
+        <input type="text" class="form-control" name="image" value="<%= prod.image %>" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Update Product</button>
+    </form>
+  </div>
+</body>
+</html>

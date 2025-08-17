@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+    }
+
+   body {
+  height: 100vh;
+  background: url("https://images.unsplash.com/photo-1542293787938-c9e299b880f3") no-repeat center;
+  background-size: 400px 300px; /* width x height */
+  background-position: center;
+  background-color: #f5f5f5; /* fallback color */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+    .signup-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 40px;
+      border-radius: 15px;
+      width: 350px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .signup-container h2 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #333;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: #4cafef;
+      outline: none;
+      box-shadow: 0 0 5px #4cafef;
+    }
+
+    .signup-btn {
+      width: 100%;
+      padding: 14px;
+      background: #4cafef;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .signup-btn:hover {
+      background: #2196f3;
+    }
+
+    .extra-text {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .extra-text a {
+      color: #4cafef;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .extra-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h2>Sign Up</h2>
+    <form action="/signup" method="POST">
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required placeholder="Enter your email">
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required placeholder="Enter your password">
+      </div>
+      <button type="submit" class="signup-btn">Sign Up</button>
+    </form>
+    <p class="extra-text">Already have an account? <a href="/login">Login</a></p>
+  </div>
+</body>
+</html>
