@@ -1,0 +1,513 @@
+<% layout("./layouts/boilerplate") %>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add New Product - Admin Panel</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    :root {
+      --primary: #3a0ca3;
+      --secondary: #4361ee;
+      --accent: #f72585;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4cc9f0;
+      --text: #2b2d42;
+      --gray: #6c757d;
+      --transition: all 0.3s ease;
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --radius: 10px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f9f9f9;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Push content below navbar */
+    main {
+      min-height: 70vh;
+      padding: 120px 50px 40px; /* top padding = navbar height + spacing */
+    }
+
+    /* Admin Panel Layout */
+    .admin-container {
+      display: flex;
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .admin-sidebar {
+      width: 250px;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      height: fit-content;
+    }
+
+    .admin-sidebar h3 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--light);
+    }
+
+    .admin-menu {
+      list-style: none;
+    }
+
+    .admin-menu li {
+      margin-bottom: 10px;
+    }
+
+    .admin-menu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 15px;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: var(--radius);
+      transition: var(--transition);
+    }
+
+    .admin-menu a:hover,
+    .admin-menu a.active {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .admin-menu i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .admin-content {
+      flex: 1;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .admin-title {
+      color: var(--primary);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Form Styles */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      font-size: 16px;
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-primary {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--gray);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .image-preview {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .image-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid #ddd;
+    }
+
+    .url-input-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .url-input-container .form-control {
+      flex: 1;
+    }
+
+    .test-image-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 15px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .test-image-btn:hover {
+      background: #d81159;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      main {
+        padding: 120px 30px 40px;
+      }
+
+      .admin-container {
+        flex-direction: column;
+      }
+
+      .admin-sidebar {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .url-input-container {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 576px) {
+      main {
+        padding: 100px 20px 30px;
+      }
+
+      .admin-content {
+        padding: 20px;
+      }
+
+      .admin-title {
+        font-size: 20px;
+      }
+
+      .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Page Content -->
+  <main>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <div class="admin-sidebar">
+        <h3>Admin Panel</h3>
+        <ul class="admin-menu">
+          <li>
+            <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="/products" class="active"
+              ><i class="fas fa-box"></i> Products</a
+            >
+          </li>
+          <li>
+            <a href="/admin/orders"
+              ><i class="fas fa-shopping-cart"></i> Orders</a
+            >
+          </li>
+          <li>
+            <a href="/admin"><i class="fas fa-users"></i> Customers</a>
+          </li>
+          <li>
+            <a href="/admin"><i class="fas fa-arrow-left"></i> Back to Store</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main Content -->
+      <div class="admin-content">
+        <div class="admin-header">
+          <h1 class="admin-title">
+            <i class="fas fa-plus-circle"></i> Add New Product
+          </h1>
+          <a href="/admin/products" class="btn btn-secondary"
+            ><i class="fas fa-arrow-left"></i> Back to Products</a
+          >
+        </div>
+
+        <form id="add-product-form" action="/admin/add" method="POST">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="item" class="form-label">Product Name *</label>
+              <input
+                type="text"
+                id="item"
+                name="item"
+                class="form-control"
+                placeholder="Enter product name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="price" class="form-label">Price ($) *</label>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                class="form-control"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="stock" class="form-label">Stock Quantity *</label>
+              <input
+                type="number"
+                id="stock"
+                name="stock"
+                class="form-control"
+                placeholder="0"
+                min="0"
+                required
+              />
+            </div>
+
+            <div class="form-group full-width">
+              <label for="image" class="form-label">Image URL *</label>
+              <div class="url-input-container">
+                <input
+                  type="url"
+                  id="image"
+                  name="image"
+                  class="form-control"
+                  placeholder="https://example.com/image.jpg"
+                  required
+                />
+                <button
+                  type="button"
+                  class="test-image-btn"
+                  id="test-image-btn"
+                >
+                  Test Image
+                </button>
+              </div>
+              <div class="image-preview" id="image-preview">
+                <img
+                  src="https://picsum.photos/seed/p2/200/200"
+                  alt="Image preview"
+                  id="preview-img"
+                />
+                <p class="image-preview-text">Image preview will appear here</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Add Product
+            </button>
+            <button type="reset" class="btn btn-secondary">
+              <i class="fas fa-times"></i> Reset Form
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Image preview functionality
+    const imageInput = document.getElementById('image');
+    const previewImg = document.getElementById('preview-img');
+    const testImageBtn = document.getElementById('test-image-btn');
+    const imagePreview = document.getElementById('image-preview');
+    const previewText = document.querySelector('.image-preview-text');
+
+    // Update preview when URL changes
+    imageInput.addEventListener('input', function () {
+      updateImagePreview(this.value);
+    });
+
+    // Test image button
+    testImageBtn.addEventListener('click', function () {
+      updateImagePreview(imageInput.value);
+    });
+
+    function updateImagePreview(url) {
+      if (url) {
+        previewImg.src = url;
+        previewImg.onload = function () {
+          previewText.style.display = 'none';
+          previewImg.style.display = 'block';
+        };
+        previewImg.onerror = function () {
+          previewText.textContent = 'Error: Cannot load image from this URL';
+          previewText.style.display = 'block';
+          previewImg.style.display = 'none';
+        };
+      } else {
+        previewText.textContent = 'Image preview will appear here';
+        previewText.style.display = 'block';
+        previewImg.style.display = 'none';
+      }
+    }
+
+    // Form validation
+    document
+      .getElementById('add-product-form')
+      .addEventListener('submit', function (e) {
+        const price = document.getElementById('price');
+        const stock = document.getElementById('stock');
+        const image = document.getElementById('image');
+
+        // Validate price
+        if (parseFloat(price.value) <= 0) {
+          e.preventDefault();
+          alert('Price must be greater than 0');
+          price.focus();
+          return false;
+        }
+
+        // Validate stock
+        if (parseInt(stock.value) < 0) {
+          e.preventDefault();
+          alert('Stock cannot be negative');
+          stock.focus();
+          return false;
+        }
+
+        // Validate image URL
+        if (!isValidUrl(image.value)) {
+          e.preventDefault();
+          alert('Please enter a valid image URL');
+          image.focus();
+          return false;
+        }
+      });
+
+    function isValidUrl(string) {
+      try {
+        new URL(string);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    // Set default image if empty
+    document
+      .getElementById('add-product-form')
+      .addEventListener('reset', function () {
+        setTimeout(function () {
+          previewImg.src = 'https://picsum.photos/seed/p2/200/200';
+          previewText.style.display = 'block';
+          previewImg.style.display = 'block';
+        }, 100);
+      });
+  </script>
+</body>

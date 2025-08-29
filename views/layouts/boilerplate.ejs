@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Shop - Premium E-Commerce Store</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary: #3a0ca3;
+        --secondary: #4361ee;
+        --accent: #f72585;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --success: #4cc9f0;
+        --text: #2b2d42;
+        --gray: #6c757d;
+        --transition: all 0.3s ease;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        --radius: 10px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: #f9f9f9;
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      /* Navbar */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--dark);
+        color: white;
+        padding: 15px 50px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .navbar.scrolled {
+        padding: 10px 50px;
+      }
+
+      .navbar .logo {
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-icon {
+        color: var(--accent);
+        font-size: 32px;
+      }
+
+      .navbar ul {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+      }
+
+      .navbar ul li {
+        margin-left: 30px;
+        position: relative;
+      }
+
+      .navbar ul li a {
+        text-decoration: none;
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+        transition: var(--transition);
+        padding: 8px 5px;
+      }
+
+      .navbar ul li a:hover {
+        color: var(--accent);
+      }
+
+      .navbar ul li a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background: var(--accent);
+        transition: var(--transition);
+      }
+
+      .navbar ul li a:hover::after {
+        width: 100%;
+      }
+
+      .nav-cta {
+        background: var(--accent);
+        padding: 10px 20px;
+        border-radius: 30px;
+        margin-left: 30px;
+        transition: var(--transition);
+      }
+
+      .nav-cta:hover {
+        background: #d81159;
+        transform: translateY(-3px);
+      }
+
+      /* Mobile menu */
+      .menu-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 30px;
+        height: 25px;
+        cursor: pointer;
+      }
+
+      .menu-toggle span {
+        width: 100%;
+        height: 3px;
+        background: white;
+        border-radius: 5px;
+        transition: var(--transition);
+      }
+
+      /* Push content below navbar */
+      main {
+        min-height: 70vh;
+        padding: 120px 50px 40px; /* top padding = navbar height + spacing */
+      }
+
+      /* Hero Section */
+      .hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+          url('https://images.unsplash.com/photo-1607082350899-7e105aa886ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        height: 500px;
+        border-radius: var(--radius);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white;
+        margin-bottom: 60px;
+        padding: 0 20px;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin-bottom: 30px;
+      }
+
+      .hero-btn {
+        background: var(--accent);
+        color: white;
+        padding: 15px 40px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        transition: var(--transition);
+        display: inline-block;
+      }
+
+      .hero-btn:hover {
+        background: #d81159;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Features Section */
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin: 60px 0;
+      }
+
+      .feature-card {
+        background: white;
+        padding: 30px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        text-align: center;
+        transition: var(--transition);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .feature-icon {
+        font-size: 40px;
+        color: var(--secondary);
+        margin-bottom: 20px;
+      }
+
+      .feature-card h3 {
+        margin-bottom: 15px;
+        color: var(--primary);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--dark);
+        color: #ddd;
+        padding: 70px 50px 30px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+      }
+
+      footer h3 {
+        color: var(--accent);
+        margin-bottom: 20px;
+        font-size: 20px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      footer h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: var(--accent);
+      }
+
+      footer p {
+        line-height: 1.8;
+      }
+
+      .footer-links ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .footer-links ul li {
+        margin: 15px 0;
+      }
+
+      .footer-links ul li a {
+        text-decoration: none;
+        color: #bbb;
+        font-size: 16px;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .footer-links ul li a i {
+        color: var(--accent);
+      }
+
+      .footer-links ul li a:hover {
+        color: white;
+        transform: translateX(5px);
+      }
+
+      .footer-contact p {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 15px 0;
+      }
+
+      .footer-contact i {
+        color: var(--accent);
+        font-size: 18px;
+      }
+
+      .footer-newsletter input {
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      .footer-newsletter button {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 5px;
+        width: 100%;
+        cursor: pointer;
+        font-weight: bold;
+        transition: var(--transition);
+      }
+
+      .footer-newsletter button:hover {
+        background: #d81159;
+      }
+
+      .social-icons {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .social-icons a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: #333;
+        border-radius: 50%;
+        color: white;
+        transition: var(--transition);
+      }
+
+      .social-icons a:hover {
+        background: var(--accent);
+        transform: translateY(-5px);
+      }
+
+      .footer-bottom {
+        text-align: center;
+        background: #111;
+        padding: 20px;
+        color: #aaa;
+        font-size: 15px;
+        margin-top: 50px;
+        grid-column: 1 / -1;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .navbar {
+          padding: 15px 30px;
+        }
+
+        main {
+          padding: 120px 30px 40px;
+        }
+
+        .hero h1 {
+          font-size: 2.8rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .navbar ul {
+          display: none;
+          flex-direction: column;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background: var(--dark);
+          padding: 20px;
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar ul.active {
+          display: flex;
+        }
+
+        .navbar ul li {
+          margin: 15px 0;
+        }
+
+        .menu-toggle {
+          display: flex;
+        }
+
+        .hero {
+          height: 400px;
+        }
+
+        .hero h1 {
+          font-size: 2.2rem;
+        }
+
+        footer {
+          padding: 50px 30px 20px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .navbar {
+          padding: 12px 20px;
+        }
+
+        main {
+          padding: 100px 20px 30px;
+        }
+
+        .hero {
+          height: 350px;
+        }
+
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+
+        .hero p {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo">
+        <i class="fas fa-store logo-icon"></i>
+        <span>MyShop</span>
+      </div>
+      <div class="menu-toggle" id="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <ul id="nav-menu">
+        <li>
+          <a href="/"><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li>
+          <a href="/products"><i class="fas fa-shopping-bag"></i> Products</a>
+        </li>
+        <li>
+          <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+        </li>
+        <li>
+          <a href="/admin"><i class="fas fa-user-cog"></i> Admin</a>
+        </li>
+        <li>
+          <a href="/contact" class="nav-cta"
+            ><i class="fas fa-phone-alt"></i> Contact Us</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <main><%- body %></main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-about">
+        <h3>About Us</h3>
+        <p>
+          Your one-stop shop for the best products online. We're committed to
+          offering quality products and exceptional service that's guaranteed to
+          satisfy.
+        </p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-pinterest"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li>
+            <a href="/products"><i class="fas fa-chevron-right"></i> Home</a>
+          </li>
+          <li>
+            <a href="/products"
+              ><i class="fas fa-chevron-right"></i> Products</a
+            >
+          </li>
+          <li>
+            <a href="/about"><i class="fas fa-chevron-right"></i> About Us</a>
+          </li>
+          <li>
+            <a href="/admin"
+              ><i class="fas fa-chevron-right"></i> Admin Panel</a
+            >
+          </li>
+          <li>
+            <a href="/contact"
+              ><i class="fas fa-chevron-right"></i> Contact Us</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h3>Contact Info</h3>
+        <p><i class="fas fa-envelope"></i> support@myshop.com</p>
+        <p><i class="fas fa-phone"></i> +123 456 7890</p>
+        <p><i class="fas fa-map-marker-alt"></i> Lahore, Pakistan</p>
+        <p><i class="fas fa-clock"></i> Mon-Sat: 9AM - 6PM</p>
+      </div>
+      <div class="footer-newsletter">
+        <h3>Newsletter</h3>
+        <p>
+          Subscribe to our newsletter for updates on new products and special
+          offers.
+        </p>
+        <input type="email" placeholder="Enter your email" />
+        <button>Subscribe</button>
+      </div>
+      <div class="footer-bottom">&copy; 2025 MyShop | All Rights Reserved</div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      const mobileMenu = document.getElementById('mobile-menu');
+      const navMenu = document.getElementById('nav-menu');
+
+      mobileMenu.addEventListener('click', function () {
+        navMenu.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+      });
+
+      // Navbar scroll effect
+      window.addEventListener('scroll', function () {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+    </script>
+  </body>
+</html>

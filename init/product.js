@@ -1,0 +1,123 @@
+let products = [
+  {
+    item: 'Smartphone',
+    price: 299,
+    stock: 10,
+    image: 'https://picsum.photos/seed/p1/200/200',
+  },
+  {
+    item: 'Laptop',
+    price: 799,
+    stock: 5,
+    image: 'https://picsum.photos/seed/p2/200/200',
+  },
+  {
+    item: 'Headphones',
+    price: 49,
+    stock: 15,
+    image: 'https://picsum.photos/seed/p3/200/200',
+  },
+  {
+    item: 'Smartwatch',
+    price: 199,
+    stock: 8,
+    image: 'https://picsum.photos/seed/p4/200/200',
+  },
+  {
+    item: 'Tablet',
+    price: 399,
+    stock: 7,
+    image: 'https://picsum.photos/seed/p5/200/200',
+  },
+  {
+    item: 'Bluetooth Speaker',
+    price: 59,
+    stock: 12,
+    image: 'https://picsum.photos/seed/p6/200/200',
+  },
+  {
+    item: 'Camera',
+    price: 499,
+    stock: 6,
+    image: 'https://picsum.photos/seed/p7/200/200',
+  },
+  {
+    item: 'Gaming Console',
+    price: 349,
+    stock: 4,
+    image: 'https://picsum.photos/seed/p8/200/200',
+  },
+  {
+    item: 'Keyboard',
+    price: 39,
+    stock: 20,
+    image: 'https://picsum.photos/seed/p9/200/200',
+  },
+  {
+    item: 'Mouse',
+    price: 25,
+    stock: 25,
+    image: 'https://picsum.photos/seed/p10/200/200',
+  },
+  {
+    item: 'Monitor',
+    price: 229,
+    stock: 9,
+    image: 'https://picsum.photos/seed/p11/200/200',
+  },
+  {
+    item: 'External Hard Drive',
+    price: 89,
+    stock: 11,
+    image: 'https://picsum.photos/seed/p12/200/200',
+  },
+  {
+    item: 'Charger',
+    price: 19,
+    stock: 30,
+    image: 'https://picsum.photos/seed/p13/200/200',
+  },
+  {
+    item: 'Power Bank',
+    price: 35,
+    stock: 18,
+    image: 'https://picsum.photos/seed/p14/200/200',
+  },
+  {
+    item: 'Router',
+    price: 69,
+    stock: 10,
+    image: 'https://picsum.photos/seed/p15/200/200',
+  },
+  {
+    item: 'USB Flash Drive',
+    price: 15,
+    stock: 40,
+    image: 'https://picsum.photos/seed/p16/200/200',
+  },
+  {
+    item: 'Drone',
+    price: 899,
+    stock: 3,
+    image: 'https://picsum.photos/seed/p17/200/200',
+  },
+  {
+    item: 'VR Headset',
+    price: 299,
+    stock: 5,
+    image: 'https://picsum.photos/seed/p18/200/200',
+  },
+  {
+    item: 'Printer',
+    price: 159,
+    stock: 7,
+    image: 'https://picsum.photos/seed/p19/200/200',
+  },
+  {
+    item: 'Smart Home Hub',
+    price: 129,
+    stock: 6,
+    image: 'https://picsum.photos/seed/p20/200/200',
+  },
+];
+module.exports = products;

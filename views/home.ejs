@@ -1,130 +1,156 @@
-<!DOCTYPE html>
-<html lang="en">
+<% layout("./layouts/boilerplate") %>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E Commerce</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Commerce Store</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      margin: 0;
       background: #f5f5f5;
       color: #333;
+      line-height: 1.6;
     }
-    header {
-      background: #222;
-      color: #fff;
-      padding: 15px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin-left: 20px;
-      font-weight: 500;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
+
     .hero {
-      background: url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f') center/cover no-repeat;
-      height: 300px;
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f')
+          center/cover no-repeat;
+      height: 320px;
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
-      font-size: 36px;
+      font-size: 44px;
       font-weight: bold;
+      text-align: center;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
     }
+
     .products {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 40px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 30px;
+      padding: 50px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
+
     .card {
       background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       overflow: hidden;
-      transition: transform 0.2s;
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-bottom: 15px;
+      position: relative;
     }
+
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
     }
+
     .card img {
       width: 100%;
-      height: 200px;
+      max-height: 200px;
       object-fit: cover;
+      border-bottom: 1px solid #eee;
+      transition: transform 0.3s;
     }
-    .card-body {
-      padding: 15px;
+
+    .card img:hover {
+      transform: scale(1.05);
     }
-    .card-body h3 {
-      font-size: 18px;
-      margin: 0 0 10px;
+
+    .card h3 {
+      margin: 15px 0 10px;
+      font-size: 22px;
+      color: #222;
     }
-    .card-body p {
+
+    .card p {
       margin: 5px 0;
+      font-size: 18px;
+      color: #555;
+      font-weight: 500;
     }
+
     .btn {
-      display: inline-block;
-      background: #222;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(90deg, #4cafef, #007bff);
       color: #fff;
-      padding: 10px 15px;
-      text-align: center;
-      border-radius: 5px;
+      padding: 10px 18px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 10px;
       text-decoration: none;
-      margin-top: 10px;
+      margin-top: 12px;
+      width: 85%;
+      transition: all 0.3s;
+      cursor: pointer;
+      border: none;
     }
+
     .btn:hover {
-      background: #444;
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-    footer {
-      background: #222;
-      color: #fff;
-      text-align: center;
-      padding: 15px;
-      margin-top: 30px;
+
+    @media (max-width: 768px) {
+      .hero {
+        font-size: 28px;
+        height: 220px;
+        padding: 0 1rem;
+      }
+      .products {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        padding: 30px 15px;
+      }
+      .btn {
+        width: 95%;
+      }
+    }
+
+    a {
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>E Commerce</h1>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/admin">Admin</a>
-      <a href="/login">Sign In</a>
-      <a href="/signup">Sign Up</a>
-    </nav>
-  </header>
-
-  <div class="hero">Welcome to E Commerce</div>
+  <div class="hero">Welcome to E-Commerce Store</div>
 
   <section class="products">
-    <% products.forEach(product => { %>
-      <div class="card">
-        <img src="<%= product.image %>" alt="<%= product.name %>">
-        <div class="card-body">
-          <h3><%= product.name %></h3>
-          <p>Price: $<%= product.price %></p>
-          <p>Stock: <%= product.stock %></p>
-          <a href="/cart/<%= product.id %>" class="btn">Add to Cart</a>
-        </div>
-      </div>
-    <% }) %>
+    <% if (products && products.length > 0) { %> <% products.forEach(product =>
+    { %>
+    <div class="card">
+      <img src="<%= product.image %>" alt="<%= product.item %>" />
+      <h3><%= product.item %></h3>
+      <p>$<%= product.price.toFixed(2) %></p>
+      <a href="/products/cart/<%= product._id %>" class="btn">
+        <i class="fa fa-cart-plus"></i> Add to Cart
+      </a>
+    </div>
+    <% }); %> <% } else { %>
+    <p style="text-align: center; font-size: 18px; padding: 40px">
+      No products found
+    </p>
+    <% } %>
   </section>
-
-  <footer>
-    <p>&copy; <%= new Date().getFullYear() %> E Commerce. All rights reserved.</p>
-  </footer>
 </body>
-</html>

@@ -1,56 +1,445 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Edit Product</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body { background: #f8f9fa; }
-    .form-container {
-      max-width: 600px;
-      margin: 50px auto;
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .form-title {
-      font-weight: bold;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    button {
-      width: 100%;
-      border-radius: 8px;
-    }
-  </style>
-</head>
-<body>
-  <div class="form-container">
-    <h2 class="form-title">Edit Product</h2>
-    <form action="/admin/update/<%= prod.id %>" method="POST">
-      <div class="mb-3">
-        <label class="form-label">Product ID</label>
-        <input type="text" class="form-control" value="<%= prod.id %>" readonly>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Product - Admin Panel</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary: #4361ee;
+        --secondary: #3a0ca3;
+        --accent: #f72585;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --success: #4cc9f0;
+        --text: #2b2d42;
+        --gray: #6c757d;
+        --transition: all 0.3s ease;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        --radius: 12px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .admin-container {
+        width: 100%;
+        max-width: 1200px;
+        display: flex;
+        gap: 25px;
+      }
+
+      .admin-sidebar {
+        width: 260px;
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 25px 20px;
+        height: fit-content;
+      }
+
+      .admin-sidebar h3 {
+        color: var(--primary);
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--light);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .admin-menu {
+        list-style: none;
+      }
+
+      .admin-menu li {
+        margin-bottom: 8px;
+      }
+
+      .admin-menu a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 15px;
+        color: var(--text);
+        text-decoration: none;
+        border-radius: var(--radius);
+        transition: var(--transition);
+        font-weight: 500;
+      }
+
+      .admin-menu a:hover,
+      .admin-menu a.active {
+        background: var(--primary);
+        color: white;
+      }
+
+      .admin-menu i {
+        width: 20px;
+        text-align: center;
+        font-size: 18px;
+      }
+
+      .admin-content {
+        flex: 1;
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .admin-header {
+        background: linear-gradient(120deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 25px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .admin-title {
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .btn-back {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: var(--radius);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition);
+      }
+
+      .btn-back:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .form-container {
+        padding: 30px;
+      }
+
+      .form-title {
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: var(--dark);
+        font-size: 22px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .mb-3 {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .form-control {
+        padding: 14px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: var(--radius);
+        font-size: 16px;
+        transition: var(--transition);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+      }
+
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+      }
+
+      .form-control[readonly] {
+        background-color: #f8f9fa;
+        color: var(--gray);
+      }
+
+      .btn-primary {
+        background: linear-gradient(120deg, var(--primary), var(--secondary));
+        border: none;
+        padding: 14px 20px;
+        border-radius: var(--radius);
+        font-weight: 600;
+        transition: var(--transition);
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+      }
+
+      .image-preview {
+        margin-top: 20px;
+        text-align: center;
+        padding: 20px;
+        border: 2px dashed #e9ecef;
+        border-radius: var(--radius);
+        background: #fafafa;
+      }
+
+      .image-preview img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .full-width {
+        grid-column: 1 / -1;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .admin-container {
+          flex-direction: column;
+        }
+
+        .admin-sidebar {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        body {
+          padding: 15px;
+          display: block;
+        }
+
+        .admin-header {
+          flex-direction: column;
+          text-align: center;
+          gap: 15px;
+          padding: 20px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .form-container {
+          padding: 20px;
+        }
+
+        .admin-title {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <div class="admin-sidebar">
+        <h3><i class="fas fa-store"></i> Admin Panel</h3>
+        <ul class="admin-menu">
+          <li>
+            <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="/admin/products" class="active"
+              ><i class="fas fa-box"></i> Products</a
+            >
+          </li>
+          <li>
+            <a href="/admin/orders"
+              ><i class="fas fa-shopping-cart"></i> Orders</a
+            >
+          </li>
+          <li>
+            <a href="/admin/customers"
+              ><i class="fas fa-users"></i> Customers</a
+            >
+          </li>
+          <li>
+            <a href="/admin/categories"
+              ><i class="fas fa-tags"></i> Categories</a
+            >
+          </li>
+          <li>
+            <a href="/products"
+              ><i class="fas fa-arrow-left"></i> Back to Store</a
+            >
+          </li>
+        </ul>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Product Name</label>
-        <input type="text" class="form-control" name="name" value="<%= prod.name %>" required>
+
+      <!-- Main Content -->
+      <div class="admin-content">
+        <div class="admin-header">
+          <h1 class="admin-title"><i class="fas fa-edit"></i> Edit Product</h1>
+          <a href="/admin/products" class="btn-back"
+            ><i class="fas fa-arrow-left"></i> Back to Products</a
+          >
+        </div>
+
+        <div class="form-container">
+          <h2 class="form-title">
+            <i class="fas fa-pencil-alt"></i> Product Details
+          </h2>
+          <form action="/admin/edit/<%= prod.id %>" method="POST">
+            <div class="form-grid">
+              <div class="mb-3">
+                <label class="form-label"
+                  ><i class="fas fa-fingerprint"></i> Product ID</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  value="<%= prod.id %>"
+                  readonly
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label"
+                  ><i class="fas fa-tag"></i> Product Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  name="item"
+                  value="<%= prod.item %>"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label"
+                  ><i class="fas fa-dollar-sign"></i> Price</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  name="price"
+                  value="<%= prod.price %>"
+                  step="0.01"
+                  min="0"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label"
+                  ><i class="fas fa-cubes"></i> Stock</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  name="stock"
+                  value="<%= prod.stock %>"
+                  min="0"
+                  required
+                />
+              </div>
+
+              <div class="mb-3 full-width">
+                <label class="form-label"
+                  ><i class="fas fa-image"></i> Image URL</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  name="image"
+                  value="<%= prod.image %>"
+                  required
+                />
+
+                <!-- Image Preview -->
+                <div class="image-preview">
+                  <img
+                    src="<%= prod.image %>"
+                    alt="Product Image Preview"
+                    id="imagePreview"
+                  />
+                  <p class="mt-2 text-muted">Image Preview</p>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Update Product
+            </button>
+          </form>
+        </div>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Price</label>
-        <input type="number" class="form-control" name="price" value="<%= prod.price %>" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Stock</label>
-        <input type="number" class="form-control" name="stock" value="<%= prod.stock %>" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Image URL</label>
-        <input type="text" class="form-control" name="image" value="<%= prod.image %>" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Update Product</button>
-    </form>
-  </div>
-</body>
+    </div>
+
+    <script>
+      // Live image preview
+      document
+        .querySelector('input[name="image"]')
+        .addEventListener('input', function (e) {
+          const preview = document.getElementById('imagePreview');
+          preview.src = e.target.value;
+        });
+
+      // Form validation
+      document.querySelector('form').addEventListener('submit', function (e) {
+        const price = document.querySelector('input[name="price"]');
+        const stock = document.querySelector('input[name="stock"]');
+
+        if (parseFloat(price.value) < 0) {
+          e.preventDefault();
+          alert('Price cannot be negative');
+          price.focus();
+          return false;
+        }
+
+        if (parseInt(stock.value) < 0) {
+          e.preventDefault();
+          alert('Stock cannot be negative');
+          stock.focus();
+          return false;
+        }
+      });
+    </script>
+  </body>
 </html>
