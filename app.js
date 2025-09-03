@@ -201,12 +201,39 @@ app.post('/signin', async (req, res) => {
 // add to cart
 app.get('/products/cart/:id', async (req, res) => {
   let { id } = req.params;
-  const product = await Product.findById(id);
-  console.log(product);
-await Cart({
-      item: product.item,
-      price: product.price,
-      stock: product.stock,
-      image: product.image,
-    }).save();  res.render('cart', { product });
+  const products = await Product.findById(id);
+
+  await Cart({
+    item: products.item,
+    price: products.price,
+    stock: products.stock,
+    image: products.image,
+  }).save();
+
+  res.redirect('/products/cart'); // ✅ redirect, not render
+});
+
+// show cart
+app.get('/products/cart', async (req, res) => {
+  const prod = await Cart.find();
+  const bill = Calculatebill(prod);
+  res.render('cart', { prod, bill });
+});
+
+function Calculatebill(prod) {
+  let sum = 0;
+  prod.forEach(product => {
+    sum = sum + product.price;
+  })
+  return sum;
+}
+// remove from cart
+app.post('/products/cart/remove/:id', async (req, res) => {
+  try {
+    await Cart.findByIdAndDelete(req.params.id);
+    res.redirect("/products/cart");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error removing item");
+  }
 });
