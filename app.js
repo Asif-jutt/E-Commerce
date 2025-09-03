@@ -2,8 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { render } = require('ejs');
 const engine = require('ejs-mate');
-const Product = require('./init/index.js');
+const { Product } = require('./init/index.js');
+const { Cart } = require('./init/index.js');
+const { Admin } = require('./init/adminuser.js');
 const path = require('path');
+const { resolveCaa } = require('dns');
 const app = express();
 const port = 8080;
 app.set('view engine', 'ejs');
@@ -22,6 +25,15 @@ main()
 app.listen(port, () => {
   console.log('server is started....');
 });
+
+// Middleware for admin
+// app.use("/admin", (req, res, next) => {
+//   res.render("/siginin").then(() => {
+//     next();
+//   }).catch(err => {
+//     console.log("Not run the middle ware render")
+//   })
+// })
 app.get('/', async (req, res) => {
   res.render('main');
 });
@@ -46,7 +58,7 @@ async function countproduct() {
   console.log(total);
   return count;
 }
-app.get('/admin', (req, res) => {
+let aadmin=app.get('/admin', (req, res) => {
   let count = 0;
   countproduct()
     .then(async (result) => {
@@ -59,18 +71,7 @@ app.get('/admin', (req, res) => {
       console.log(err);
     });
 });
-// add products
-app.post('/', (req, res) => {
-  let product = {
-    id: Math.floor(Math.random(50) + 1),
-    name: req.body.name,
-    price: req.body.price,
-    stock: req.body.stock,
-    image: req.body.image,
-  };
-  products.push(product);
-  res.redirect('/');
-});
+//
 // view details
 app.get('/admin/view/:id', async (req, res) => {
   let { id } = req.params;
@@ -139,4 +140,73 @@ app.post('/admin/add', async (req, res) => {
     console.log('Not add the products');
   }
 });
+// Admin signup
+app.get('/signup', (req, res) => {
+  res.render('siginup');
+});
+// post req
 
+app.post('/signup', async (req, res) => {
+  try {
+    const user = new Admin({
+      email: req.body.email,
+      password: req.body.password,
+    });
+
+    // check if email exists
+    let user1 = await Admin.findOne({ email: req.body.email });
+    if (user1) {
+      return res.send(
+        "<script>alert('This email is already taken!'); window.location='/signup'</script>"
+      );
+    }
+
+    // save new user
+    await user.save();
+    res.send(
+      "<script>alert('New user is successfully added!'); window.location='/admin'</script>"
+    );
+  } catch (err) {
+    console.log(err);
+    res.send(
+      "<script>alert('Something went wrong!'); window.location='/signin/home/add'</script>"
+    );
+  }
+});
+// Siginin
+
+app.get('/signin', (req, res) => {
+  res.render('siginin');
+});
+// post
+app.post('/signin', async (req, res) => {
+  try {
+    let user = await Admin.findOne({
+      email: req.body.email,
+      password: req.body.password,
+    });
+
+    if (!user) {
+      return res.send(
+        "<script>alert('Invalid email or password!'); window.location='/signin';</script>"
+      );
+    }
+
+    aadmin();
+  } catch (err) {
+    console.log(err);
+    res.send('Something went wrong!');
+  }
+});
+// add to cart
+app.get('/products/cart/:id', async (req, res) => {
+  let { id } = req.params;
+  const product = await Product.findById(id);
+  console.log(product);
+await Cart({
+      item: product.item,
+      price: product.price,
+      stock: product.stock,
+      image: product.image,
+    }).save();  res.render('cart', { product });
+});

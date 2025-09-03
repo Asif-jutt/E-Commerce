@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<% layout("./layouts/boilerplate") %>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +17,7 @@
   background-size: 400px 300px; /* width x height */
   background-position: center;
   background-color: #f5f5f5; /* fallback color */
-  display: flex;
+  display: center;
   justify-content: center;
   align-items: center;
 }
@@ -31,6 +30,7 @@
       width: 350px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
       text-align: center;
+      margin-left: 34%;
     }
 
     .signup-container h2 {
@@ -114,7 +114,6 @@
       </div>
       <button type="submit" class="signup-btn">Sign Up</button>
     </form>
-    <p class="extra-text">Already have an account? <a href="/login">Login</a></p>
+    <p class="extra-text">Already have an account? <a href="/signin">Login</a></p>
   </div>
 </body>
-</html>

@@ -24,7 +24,7 @@ const ProductSchema = new mongoose.Schema({
     default: 'https://picsum.photos/seed/p2/200/200',
   },
 });
-
+const Cart = new mongoose.model('Cart', ProductSchema);
 const Product = new mongoose.model('Product', ProductSchema);
 
 async function addproduct() {
@@ -36,4 +36,4 @@ async function addproduct() {
   }
 }
 // addproduct();
-module.exports = Product;
+module.exports = {Product,Cart};
