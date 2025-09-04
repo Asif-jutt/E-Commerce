@@ -8,70 +8,78 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
       :root {
-        --primary: #4361ee;
-        --secondary: #3a0ca3;
-        --success: #4cc9f0;
-        --danger: #e63946;
-        --warning: #fca311;
-        --info: #4895ef;
+        --primary: #4a6cf7;
+        --primary-dark: #3451b2;
+        --secondary: #6c757d;
+        --success: #198754;
+        --info: #0dcaf0;
+        --warning: #ffc107;
+        --danger: #dc3545;
         --light: #f8f9fa;
         --dark: #212529;
-        --gray: #6c757d;
-        --sidebar-width: 250px;
-        --header-height: 70px;
+        --gray-100: #f8f9fa;
+        --gray-200: #e9ecef;
+        --gray-300: #dee2e6;
+        --gray-600: #6c757d;
+        --gray-800: #343a40;
+        --sidebar-width: 260px;
+        --header-height: 80px;
         --transition: all 0.3s ease;
-        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
         --card-radius: 12px;
+        --sidebar-bg: #1e2a4a;
       }
 
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
 
       body {
-        background-color: #f5f7fb;
-        color: #333;
+        background-color: #f6f9fc;
+        color: var(--gray-800);
         min-height: 100vh;
         display: flex;
+        line-height: 1.6;
       }
 
       /* Sidebar */
       .sidebar {
         width: var(--sidebar-width);
-        background: linear-gradient(
-          to bottom,
-          var(--primary),
-          var(--secondary)
-        );
+        background: var(--sidebar-bg);
         color: white;
         height: 100vh;
         position: fixed;
-        padding: 20px 0;
-        box-shadow: var(--shadow);
+        padding: 24px 0;
+        box-shadow: var(--shadow-md);
         z-index: 1000;
         overflow-y: auto;
+        transition: var(--transition);
       }
 
       .sidebar-header {
-        padding: 0 20px 20px;
+        padding: 0 24px 24px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        margin-bottom: 20px;
+        margin-bottom: 24px;
       }
 
       .sidebar-header h2 {
         display: flex;
         align-items: center;
-        gap: 10px;
-        font-size: 1.5rem;
+        gap: 12px;
+        font-size: 1.4rem;
+        font-weight: 600;
       }
 
       .sidebar-header h2 i {
-        background: var(--info);
+        background: var(--primary);
         width: 40px;
         height: 40px;
         border-radius: 10px;
@@ -81,108 +89,140 @@
       }
 
       .nav-item {
-        padding: 12px 20px;
+        padding: 14px 24px;
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 16px;
         transition: var(--transition);
-        color: rgba(255, 255, 255, 0.8);
+        color: rgba(255, 255, 255, 0.85);
         text-decoration: none;
         font-weight: 500;
+        font-size: 0.95rem;
+        border-left: 3px solid transparent;
       }
 
       .nav-item:hover,
       .nav-item.active {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
         color: white;
-        border-left: 4px solid var(--info);
+        border-left: 3px solid var(--primary);
+        padding-left: 21px;
       }
 
       .nav-item i {
         width: 20px;
         text-align: center;
+        font-size: 1.1rem;
       }
 
       /* Main Content */
       .main-content {
         flex: 1;
         margin-left: var(--sidebar-width);
-        padding: 20px;
+        padding: 24px;
+        transition: var(--transition);
       }
 
       /* Header */
       .header {
         background: white;
-        padding: 15px 30px;
+        padding: 20px 32px;
         border-radius: var(--card-radius);
-        box-shadow: var(--shadow);
+        box-shadow: var(--shadow-sm);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
+        margin-bottom: 32px;
+        border: 1px solid var(--gray-200);
       }
 
       .welcome-box h1 {
-        font-size: 1.8rem;
+        font-size: 1.7rem;
+        font-weight: 600;
         color: var(--dark);
-        margin-bottom: 5px;
+        margin-bottom: 4px;
       }
 
       .welcome-box p {
-        color: var(--gray);
+        color: var(--gray-600);
+        font-size: 0.95rem;
       }
 
       .user-info {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 16px;
       }
 
       .user-avatar {
-        width: 45px;
-        height: 45px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
-        background: var(--primary);
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
-        font-size: 1.2rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .user-details {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .user-details div:first-child {
+        font-weight: 500;
+      }
+
+      .user-details small {
+        color: var(--gray-600);
+        font-size: 0.85rem;
       }
 
       /* Dashboard Cards */
       .dashboard-cards {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
       }
 
       .card {
         background: white;
         border-radius: var(--card-radius);
-        padding: 20px;
-        box-shadow: var(--shadow);
+        padding: 24px;
+        box-shadow: var(--shadow-sm);
         transition: var(--transition);
+        border: 1px solid var(--gray-200);
+        opacity: 0;
+        transform: translateY(10px);
       }
 
       .card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-lg);
       }
 
       .card-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
+        align-items: flex-start;
+        margin-bottom: 20px;
+      }
+
+      .card-header h3 {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--gray-600);
       }
 
       .card-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 10px;
+        width: 54px;
+        height: 54px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -190,51 +230,70 @@
       }
 
       .bg-primary {
-        background: rgba(67, 97, 238, 0.2);
+        background: rgba(74, 108, 247, 0.15);
         color: var(--primary);
       }
       .bg-success {
-        background: rgba(76, 201, 240, 0.2);
+        background: rgba(25, 135, 84, 0.15);
         color: var(--success);
       }
       .bg-warning {
-        background: rgba(252, 163, 17, 0.2);
+        background: rgba(255, 193, 7, 0.15);
         color: var(--warning);
       }
       .bg-danger {
-        background: rgba(230, 57, 70, 0.2);
+        background: rgba(220, 53, 69, 0.15);
         color: var(--danger);
       }
 
       .card-value {
-        font-size: 1.8rem;
-        font-weight: bold;
-        margin-bottom: 5px;
+        font-size: 1.9rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: var(--dark);
       }
 
       .card-label {
-        color: var(--gray);
+        color: var(--gray-600);
         font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
       }
 
-      /* Products Table */
+      .trending {
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+
+      .trending.up {
+        color: var(--success);
+      }
+
+      .trending.down {
+        color: var(--danger);
+      }
+
+      /* Products Section */
       .products-section {
         background: white;
         border-radius: var(--card-radius);
-        padding: 25px;
-        box-shadow: var(--shadow);
-        margin-bottom: 30px;
+        padding: 28px;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 32px;
+        border: 1px solid var(--gray-200);
       }
 
       .section-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 24px;
       }
 
       .section-title {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
+        font-weight: 600;
         color: var(--dark);
       }
 
@@ -249,21 +308,22 @@
         transition: var(--transition);
         border: none;
         cursor: pointer;
+        font-size: 0.95rem;
       }
 
       .btn-primary {
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        background: linear-gradient(90deg, var(--primary), var(--primary-dark));
         color: white;
+        box-shadow: 0 4px 6px rgba(74, 108, 247, 0.25);
       }
 
       .btn-primary:hover {
-        background: linear-gradient(90deg, var(--secondary), var(--primary));
         transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+        box-shadow: 0 6px 12px rgba(74, 108, 247, 0.3);
       }
 
       .btn-back {
-        background: var(--gray);
+        background: var(--gray-600);
         color: white;
       }
 
@@ -273,31 +333,40 @@
 
       .table-container {
         overflow-x: auto;
+        border-radius: var(--card-radius);
+        border: 1px solid var(--gray-200);
       }
 
       table {
         width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 0;
       }
 
       table th,
       table td {
-        padding: 15px;
+        padding: 16px;
         text-align: left;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid var(--gray-200);
       }
 
       table th {
-        background-color: #f8f9fa;
-        color: var(--gray);
+        background-color: var(--gray-100);
+        color: var(--gray-800);
         font-weight: 600;
         position: sticky;
         top: 0;
+        font-size: 0.95rem;
+        padding: 16px;
+      }
+
+      table tr:last-child td {
+        border-bottom: none;
       }
 
       table tr:hover {
-        background-color: #8a8f64;
+        background-color: rgba(74, 108, 247, 0.03);
         cursor: pointer;
       }
 
@@ -306,29 +375,47 @@
         height: 60px;
         object-fit: cover;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+      }
+
+      .product-img:hover {
+        transform: scale(1.05);
+        box-shadow: var(--shadow-md);
       }
 
       .stock-badge {
-        padding: 5px 10px;
+        padding: 6px 12px;
         border-radius: 20px;
         font-size: 0.8rem;
         font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .stock-badge i {
+        font-size: 0.7rem;
       }
 
       .stock-high {
-        background: rgba(40, 167, 69, 0.2);
-        color: #28a745;
+        background: rgba(25, 135, 84, 0.15);
+        color: var(--success);
       }
 
       .stock-medium {
-        background: rgba(255, 193, 7, 0.2);
-        color: #ffc107;
+        background: rgba(255, 193, 7, 0.15);
+        color: var(--warning);
       }
 
       .stock-low {
-        background: rgba(220, 53, 69, 0.2);
-        color: #dc3545;
+        background: rgba(220, 53, 69, 0.15);
+        color: var(--danger);
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 8px;
       }
 
       .btn-action {
@@ -343,30 +430,40 @@
       }
 
       .btn-info {
+        background: rgba(13, 202, 240, 0.15);
+        color: var(--info);
+      }
+
+      .btn-info:hover {
         background: var(--info);
         color: white;
       }
 
       .btn-warning {
+        background: rgba(255, 193, 7, 0.15);
+        color: var(--warning);
+      }
+
+      .btn-warning:hover {
         background: var(--warning);
         color: white;
       }
 
       .btn-danger {
-        background: var(--danger);
-        color: white;
+        background: rgba(220, 53, 69, 0.15);
+        color: var(--danger);
       }
 
-      .btn-action:hover {
-        opacity: 0.9;
-        transform: translateY(-2px);
+      .btn-danger:hover {
+        background: var(--danger);
+        color: white;
       }
 
       /* Footer */
       .footer {
         text-align: center;
-        padding: 20px;
-        color: var(--gray);
+        padding: 24px;
+        color: var(--gray-600);
         font-size: 0.9rem;
         margin-top: 40px;
       }
@@ -389,6 +486,12 @@
 
         .main-content {
           margin-left: 70px;
+          padding: 16px;
+        }
+        
+        .dashboard-cards {
+          grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+          gap: 16px;
         }
       }
 
@@ -400,11 +503,22 @@
         .header {
           flex-direction: column;
           text-align: center;
-          gap: 15px;
+          gap: 16px;
+          padding: 16px;
         }
 
         .user-info {
           justify-content: center;
+        }
+        
+        .section-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+        }
+        
+        .action-buttons {
+          flex-wrap: wrap;
         }
       }
     </style>
@@ -448,7 +562,7 @@
         </div>
         <div class="user-info">
           <div class="user-avatar">A</div>
-          <div>
+          <div class="user-details">
             <div>Admin User</div>
             <small>Administrator</small>
           </div>
@@ -465,7 +579,10 @@
             </div>
           </div>
           <div class="card-value"><%= count %></div>
-          <div class="card-label">Total Products</div>
+          <div class="card-label">
+            <span>Total Products</span>
+            <span class="trending up">+12% <i class="fas fa-arrow-up"></i></span>
+          </div>
         </div>
 
         <div class="card">
@@ -475,8 +592,11 @@
               <i class="fas fa-shopping-cart"></i>
             </div>
           </div>
-          <div class="card-value">326</div>
-          <div class="card-label">This Month</div>
+          <div class="card-value"><%= totalorder %></div>
+          <div class="card-label">
+            <span>This Month</span>
+            <span class="trending up">+8% <i class="fas fa-arrow-up"></i></span>
+          </div>
         </div>
 
         <div class="card">
@@ -487,7 +607,10 @@
             </div>
           </div>
           <div class="card-value">$12,845</div>
-          <div class="card-label">This Month</div>
+          <div class="card-label">
+            <span>This Month</span>
+            <span class="trending up">+5.3% <i class="fas fa-arrow-up"></i></span>
+          </div>
         </div>
 
         <div class="card">
@@ -498,7 +621,10 @@
             </div>
           </div>
           <div class="card-value">1,258</div>
-          <div class="card-label">Registered Users</div>
+          <div class="card-label">
+            <span>Registered Users</span>
+            <span class="trending up">+3.2% <i class="fas fa-arrow-up"></i></span>
+          </div>
         </div>
       </div>
 
@@ -524,7 +650,6 @@
             </thead>
             <tbody>
               <% products.forEach(product => { %>
-                
               <tr>
                 <td>
                   <img
@@ -533,42 +658,44 @@
                     class="product-img"
                   />
                 </td>
-                <td><%= product.item %></td>
+                <td><strong><%= product.item %></strong></td>
                 <td>$<%= product.price %></td>
                 <td>
                   <% if(product.stock > 20) { %>
-                  <span class="stock-badge stock-high"
-                    >In Stock (<%= product.stock %>)</span
+                  <span class="stock-badge"
+                    ><i class="fas fa-check-circle"></i> In Stock (<%= product.stock %>)</span
                   >
                   <% } else if(product.stock > 5) { %>
                   <span class="stock-badge stock-medium"
-                    >Low Stock (<%= product.stock %>)</span
+                    ><i class="fas fa-exclamation-circle"></i> Low Stock (<%= product.stock %>)</span
                   >
                   <% } else { %>
                   <span class="stock-badge stock-low"
-                    >Critical (<%= product.stock %>)</span
+                    ><i class="fas fa-times-circle"></i> Critical (<%= product.stock %>)</span
                   >
                   <% } %>
                 </td>
                 <td>
-                  <a
-                    href="/admin/view/<%= product.id %>"
-                    class="btn-action btn-info"
-                  >
-                    <i class="fas fa-eye"></i> View
-                  </a>
-                  <a
-                    href="/admin/edit/<%= product.id %>"
-                    class="btn-action btn-warning"
-                  >
-                    <i class="fas fa-edit"></i> Edit
-                  </a>
-                  <a
-                    href="/admin/delete/<%= product.id %>"
-                    class="btn-action btn-danger"
-                  >
-                    <i class="fas fa-trash"></i> Delete
-                  </a>
+                  <div class="action-buttons">
+                    <a
+                      href="/admin/view/<%= product.id %>"
+                      class="btn-action btn-info"
+                    >
+                      <i class="fas fa-eye"></i> View
+                    </a>
+                    <a
+                      href="/admin/edit/<%= product.id %>"
+                      class="btn-action btn-warning"
+                    >
+                      <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a
+                      href="/admin/delete/<%= product.id %>"
+                      class="btn-action btn-danger"
+                    >
+                      <i class="fas fa-trash"></i> Delete
+                    </a>
+                  </div>
                 </td>
               </tr>
               <% }) %>
@@ -583,7 +710,7 @@
     </div>
 
     <script>
-      // Simple animation for cards on page load
+      // Animation for cards on page load
       document.addEventListener('DOMContentLoaded', function () {
         const cards = document.querySelectorAll('.card');
         cards.forEach((card, index) => {
@@ -591,6 +718,15 @@
             card.style.opacity = 1;
             card.style.transform = 'translateY(0)';
           }, 100 * index);
+        });
+        
+        // Add active state to table rows
+        const tableRows = document.querySelectorAll('table tr');
+        tableRows.forEach(row => {
+          row.addEventListener('click', () => {
+            tableRows.forEach(r => r.classList.remove('active'));
+            row.classList.add('active');
+          });
         });
       });
     </script>

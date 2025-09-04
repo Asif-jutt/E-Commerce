@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { render } = require('ejs');
 const engine = require('ejs-mate');
 const { Product } = require('./init/index.js');
+const {Customer}=require("./init/customer.js")
 const { Cart } = require('./init/index.js');
 const { Admin } = require('./init/adminuser.js');
 const path = require('path');
@@ -58,14 +59,17 @@ async function countproduct() {
   console.log(total);
   return count;
 }
-let aadmin=app.get('/admin', (req, res) => {
-  let count = 0;
+app.get('/admin', (req, res) => {
+  let totalorder=0,count = 0;
+  order().then((result) => {
+    totalorder = result;
+  })
   countproduct()
     .then(async (result) => {
       count = result;
       console.log(result);
       const products = await Product.find();
-      res.render('admin', { products, count });
+      res.render('admin', { products, count ,totalorder});
     })
     .catch((err) => {
       console.log(err);
@@ -191,13 +195,40 @@ app.post('/signin', async (req, res) => {
         "<script>alert('Invalid email or password!'); window.location='/signin';</script>"
       );
     }
-
-    aadmin();
+    res.redirect("/admin");
   } catch (err) {
     console.log(err);
     res.send('Something went wrong!');
   }
 });
+// checkout 
+// GET checkout page
+app.get("/products/cart/checkout", async (req, res) => {
+  try {
+    const cartItems = await Cart.find(); 
+    res.render("checkout", { cartItems });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error loading checkout");
+  }
+});
+
+// POST checkout (handle order)
+app.post("/products/cart/checkout", async (req, res) => {
+  const { username, email, payment } = req.body;
+  console.log("Order received:", username, email, payment);
+  let cartitem = await Cart.find();
+  await Customer({
+    username: username,
+    email: email,
+    orders: cartitem
+  }).save();
+  await Cart.deleteMany({});
+  // yahan aap order save kar sakte ho DB me
+
+  res.redirect("/products")
+});
+
 // add to cart
 app.get('/products/cart/:id', async (req, res) => {
   let { id } = req.params;
@@ -219,13 +250,18 @@ app.get('/products/cart', async (req, res) => {
   const bill = Calculatebill(prod);
   res.render('cart', { prod, bill });
 });
-
+// Calculatebill
 function Calculatebill(prod) {
   let sum = 0;
   prod.forEach(product => {
     sum = sum + product.price;
   })
   return sum;
+}
+// calculate the total register and order 
+async function order() {
+  let a = await Customer.countDocuments();
+  return a;
 }
 // remove from cart
 app.post('/products/cart/remove/:id', async (req, res) => {
@@ -237,3 +273,4 @@ app.post('/products/cart/remove/:id', async (req, res) => {
     res.status(500).send("Error removing item");
   }
 });
+
