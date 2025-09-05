@@ -1,310 +1,219 @@
 const express = require('express');
 require("dotenv").config();
 const mongoose = require('mongoose');
-const { render } = require('ejs');
 const engine = require('ejs-mate');
+const ExpressError = require("./views/ExpressError");
 const nodemailer = require('nodemailer');
+const path = require('path');
+const  sendMessageFromUser  = require('./contactemail.js');
 const { Product } = require('./init/index.js');
 const { Customer } = require('./init/customer.js');
 const { Cart } = require('./init/index.js');
 const { Admin } = require('./init/adminuser.js');
-const sendEmail = require('./email.js'); // correct path to your file
-const path = require('path');
-const { resolveCaa } = require('dns');
+const sendEmail = require('./email.js');
+const { defaultresponse } = require("./views/deflauthandler");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 app.set('view engine', 'ejs');
 app.engine('ejs', engine);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// MongoDB connection
 async function main() {
   await mongoose.connect(process.env.MONGO_URI);
 }
 main()
-  .then(() => {
-    console.log('Connection is build...');
-  })
-  .catch((err) => console.log(err));
-app.listen(PORT, () => {
-  console.log('server is started....');
-});
+  .then(() => console.log('Connection is built...'))
+  .catch(err => console.log(err));
 
-// Middleware for admin
-// app.use("/admin", (req, res, next) => {
-//   res.render("/siginin").then(() => {
-//     next();
-//   }).catch(err => {
-//     console.log("Not run the middle ware render")
-//   })
-// })
-app.get('/', async (req, res) => {
+app.listen(PORT, () => console.log('Server is started....'));
+
+// Async wrap middleware
+function asyncwrap(fn) {
+  return function (req, res, next) {
+    fn(req, res, next).catch(err => next(new ExpressError(500, "Something went wrong!")));
+  };
+}
+
+// Routes
+app.get('/', asyncwrap(async (req, res) => {
   res.render('main');
-});
-app.get('/products', async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.render('home.ejs', { products });
-  } catch (err) {
-    console.log(err);
-  }
-});
+}));
+
+app.get('/products', asyncwrap(async (req, res) => {
+  const products = await Product.find();
+  res.render('home.ejs', { products });
+}));
 
 // Admin panels
 async function countproduct() {
   const products = await Product.find();
   let count = 0;
-  let total = 0;
-  products.forEach((prod) => {
-    count = count + prod.stock;
-    total = total + 1;
-  });
-  console.log(total);
+  products.forEach(p => count += p.stock);
   return count;
 }
-app.get('/admin', (req, res) => {
-  let totalorder = 0,
-    count = 0;
-  order().then((result) => {
-    totalorder = result;
-  });
-  countproduct()
-    .then(async (result) => {
-      count = result;
-      console.log(result);
-      const products = await Product.find();
-      res.render('admin', { products, count, totalorder });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-//
-// view details
-app.get('/admin/view/:id', async (req, res) => {
-  let { id } = req.params;
-  // convert string → number
-  let prod = await Product.findById(id);
-  console.log(id);
-  if (!prod) {
-    return res.send('Product not found!');
-  }
 
+async function order() {
+  return await Customer.countDocuments();
+}
+
+app.get('/admin', asyncwrap(async (req, res) => {
+  const totalorder = await order();
+  const count = await countproduct();
+  const products = await Product.find();
+  res.render('admin', { products, count, totalorder });
+}));
+
+// View product details
+app.get('/admin/view/:id', asyncwrap(async (req, res) => {
+  const { id } = req.params;
+  const prod = await Product.findById(id);
+  if (!prod) return res.send('Product not found!');
   res.render('view.ejs', { prod });
-});
+}));
 
-// edit product details not update id other update
-
-app.get('/admin/edit/:id', async (req, res) => {
-  let { id } = req.params;
-  let prod = await Product.findById(id);
-  if (!prod) {
-    return res.send('Product not found!');
-  }
+// Edit product
+app.get('/admin/edit/:id', asyncwrap(async (req, res) => {
+  const { id } = req.params;
+  const prod = await Product.findById(id);
+  if (!prod) return res.send('Product not found!');
   res.render('edit.ejs', { prod });
-});
-// post
-app.post('/admin/edit/:id', async (req, res) => {
-  let { id } = req.params;
-  let { item, price, stock, image } = req.body;
-  price = Number(price);
-  stock = Number(stock);
+}));
+
+app.post('/admin/edit/:id', asyncwrap(async (req, res) => {
+  const { id } = req.params;
+  const { item, price, stock, image } = req.body;
   const product = await Product.findById(id);
   if (product) {
     product.item = item;
-    product.price = price;
-    product.stock = stock;
+    product.price = Number(price);
+    product.stock = Number(stock);
     product.image = image;
     await product.save();
   }
-
   res.redirect('/admin/view/' + id);
-});
+}));
 
-// delete the products
-app.get('/admin/delete/:id', async (req, res) => {
-  let { id } = req.params;
-  products = await Product.findByIdAndDelete(id);
-  console.log('Product is deleted');
+// Delete product
+app.get('/admin/delete/:id', asyncwrap(async (req, res) => {
+  await Product.findByIdAndDelete(req.params.id);
   res.redirect('/admin');
-});
+}));
 
-// add products
-
-app.get('/admin/add', (req, res) => {
+// Add product
+app.get('/admin/add', asyncwrap(async (req, res) => {
   res.render('add');
-});
-app.post('/admin/add', async (req, res) => {
-  try {
-    const { item, price, stock, image } = req.body;
-    await Product({
-      item: item,
-      price: price,
-      stock: stock,
-      image: image,
-    }).save();
-    res.redirect('/admin');
-  } catch (err) {
-    console.log('Not add the products');
-  }
-});
+}));
+
+app.post('/admin/add', asyncwrap(async (req, res) => {
+  const { item, price, stock, image } = req.body;
+  await Product({ item, price, stock, image }).save();
+  res.redirect('/admin');
+}));
+
 // Admin signup
-app.get('/signup', (req, res) => {
+app.get('/signup', asyncwrap(async (req, res) => {
   res.render('siginup');
-});
-// post req
+}));
 
-app.post('/signup', async (req, res) => {
-  try {
-    const user = new Admin({
-      email: req.body.email,
-      password: req.body.password,
-    });
-
-    // check if email exists
-    let user1 = await Admin.findOne({ email: req.body.email });
-    if (user1) {
-      return res.send(
-        "<script>alert('This email is already taken!'); window.location='/signup'</script>"
-      );
-    }
-
-    // save new user
-    await user.save();
-    res.send(
-      "<script>alert('New user is successfully added!'); window.location='/admin'</script>"
-    );
-  } catch (err) {
-    console.log(err);
-    res.send(
-      "<script>alert('Something went wrong!'); window.location='/signin/home/add'</script>"
-    );
+app.post('/signup', asyncwrap(async (req, res) => {
+  const { email, password } = req.body;
+  const existingUser = await Admin.findOne({ email });
+  if (existingUser) {
+    return res.send("<script>alert('This email is already taken!'); window.location='/signup'</script>");
   }
-});
-// Siginin
+  await Admin({ email, password }).save();
+  res.send("<script>alert('New user is successfully added!'); window.location='/admin'</script>");
+}));
 
-app.get('/signin', (req, res) => {
+// Admin signin
+app.get('/signin', asyncwrap(async (req, res) => {
   res.render('siginin');
-});
-// post
-app.post('/signin', async (req, res) => {
-  try {
-    let user = await Admin.findOne({
-      email: req.body.email,
-      password: req.body.password,
-    });
+}));
+// cart
+app.post('/products/cart/remove/:id', asyncwrap(async (req, res) => {
+  await Cart.findByIdAndDelete(req.params.id);
+  res.redirect('/products/cart');
+}));
 
-    if (!user) {
-      return res.send(
-        "<script>alert('Invalid email or password!'); window.location='/signin';</script>"
-      );
-    }
-    res.redirect('/admin');
-  } catch (err) {
-    console.log(err);
-    res.send('Something went wrong!');
-  }
-});
-// checkout
-// GET checkout page
-app.get('/products/cart/checkout', async (req, res) => {
+// Checkout
+app.get('/products/cart/checkout', asyncwrap(async (req, res) => {
   try {
     const cartItems = await Cart.find();
+    console.log('Cart items:', cartItems);
     res.render('checkout', { cartItems });
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Error loading checkout');
+    console.error('Checkout GET error:', err);
+    throw err;
   }
-});
+}));
+app.post('/signin', asyncwrap(async (req, res) => {
+  const user = await Admin.findOne({ email: req.body.email, password: req.body.password });
+  if (!user) return res.send("<script>alert('Invalid email or password!'); window.location='/signin';</script>");
+  res.redirect('/admin');
+}));
 
-// POST checkout (handle order)
-app.post('/products/cart/checkout', async (req, res) => {
-  const { username, email, payment } = req.body;
-  console.log('Order received:', username, email, payment);
-  let cartitem = await Cart.find();
-  await Customer({
-    username: username,
-    email: email,
-    orders: cartitem,
-  }).save();
-  await Cart.deleteMany({});
-  // yahan aap order save kar sakte ho DB me
-
-  res.redirect('/products');
-});
-
-// add to cart
-app.get('/products/cart/:id', async (req, res) => {
-  let { id } = req.params;
-  const products = await Product.findById(id);
-
-  await Cart({
-    item: products.item,
-    price: products.price,
-    stock: products.stock,
-    image: products.image,
-  }).save();
-
-  res.redirect('/products/cart'); // ✅ redirect, not render
-});
-
-// show cart
-app.get('/products/cart', async (req, res) => {
+// Cart & checkout
+app.get('/products/cart', asyncwrap(async (req, res) => {
   const prod = await Cart.find();
-  const bill = Calculatebill(prod);
+  const bill = prod.reduce((sum, p) => sum + p.price, 0);
   res.render('cart', { prod, bill });
-});
-// Calculatebill
-function Calculatebill(prod) {
-  let sum = 0;
-  prod.forEach((product) => {
-    sum = sum + product.price;
-  });
-  return sum;
-}
-// calculate the total register and order
-async function order() {
-  let a = await Customer.countDocuments();
-  return a;
-}
-// remove from cart
-app.post('/products/cart/remove/:id', async (req, res) => {
-  try {
-    await Cart.findByIdAndDelete(req.params.id);
-    res.redirect('/products/cart');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error removing item');
-  }
-});
+}));
 
-// email send funcitonalties
-app.get('/sub', async (req, res) => {
+app.get('/products/cart/:id', asyncwrap(async (req, res) => {
+  const prod = await Product.findById(req.params.id);
+  if (!prod) return res.send('Product not found!');
+  await Cart({ item: prod.item, price: prod.price, stock: prod.stock, image: prod.image }).save();
+  res.redirect('/products/cart');
+}));
+
+
+
+app.post('/products/cart/checkout', asyncwrap(async (req, res) => {
+  const { username, email, payment } = req.body;
+  const cartItems = await Cart.find();
+  if (!cartItems.length) return res.send("<script>alert('Cart is empty!'); window.location='/products/cart';</script>");
+
+  await Customer({ username, email, orders: cartItems }).save();
+  await Cart.deleteMany({});
+  return res.redirect('/products');
+}));
+
+// Email subscription
+app.get('/sub', asyncwrap(async (req, res) => {
   const { email } = req.query;
-  console.log('📩 Received email from form:', email);
+  if (!email) return res.send("<script>alert('Please enter a valid email!'); window.location='/';</script>");
+  await sendEmail(email);
+  res.send("<script>alert('Subscription successful! Check your email!'); window.location='/';</script>");
+}));
+// contact us
+app.get('/contact', asyncwrap(async (req, res) => {
+  res.render("contact");
+}));
+// contact email
+app.post('/contact', asyncwrap(async (req, res) => {
+  const { name, email, subject, message } = req.body;
+  console.log(req.body);
 
-  if (!email) {
-    return res.send(
-      "<script>alert('Please enter a valid email!'); window.location='/';</script>"
-    );
+  if (!email || !message) {
+    return res.send("<script>alert('Please fill all fields!'); window.location='/contact';</script>");
   }
 
-  try {
-    await sendEmail(email);
-    res.send(
-      "<script>alert('Subscription successful! Check your email!'); window.location='/';</script>"
-    );
-  } catch (err) {
-    console.error('❌ Email error:', err);
-    res.send(
-      "<script>alert('Error sending email! Try again.'); window.location='/';</script>"
-    );
-  }
+  await sendMessageFromUser({ userEmail: email, subject, message, name });
+  res.send("<script>alert('Message sent successfully!'); window.location='/contact';</script>");
+}));
+// Customer panel
+app.get("/user", (req, res) => res.render("customer"));
+
+// Default response
+app.use((req, res) => res.send(defaultresponse));
+
+// Error handler
+app.use((err, req, res, next) => {
+  const { status = 404, message = "Something went wrong!" } = err;
+  res.status(status).send(message);
 });
-// user or customer panel
-app.get("/user", (req, res) => {
-  res.render("customer")
-})
