@@ -1,29 +1,35 @@
 const express = require('express');
+require("dotenv").config();
 const mongoose = require('mongoose');
 const { render } = require('ejs');
 const engine = require('ejs-mate');
+const nodemailer = require('nodemailer');
 const { Product } = require('./init/index.js');
-const {Customer}=require("./init/customer.js")
+const { Customer } = require('./init/customer.js');
 const { Cart } = require('./init/index.js');
 const { Admin } = require('./init/adminuser.js');
+const sendEmail = require('./email.js'); // correct path to your file
 const path = require('path');
 const { resolveCaa } = require('dns');
 const app = express();
-const port = 8080;
+const PORT = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
 app.engine('ejs', engine);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/ecommerce');
+  await mongoose.connect(process.env.MONGO_URI);
 }
 main()
   .then(() => {
     console.log('Connection is build...');
   })
   .catch((err) => console.log(err));
-app.listen(port, () => {
+app.listen(PORT, () => {
   console.log('server is started....');
 });
 
@@ -60,16 +66,17 @@ async function countproduct() {
   return count;
 }
 app.get('/admin', (req, res) => {
-  let totalorder=0,count = 0;
+  let totalorder = 0,
+    count = 0;
   order().then((result) => {
     totalorder = result;
-  })
+  });
   countproduct()
     .then(async (result) => {
       count = result;
       console.log(result);
       const products = await Product.find();
-      res.render('admin', { products, count ,totalorder});
+      res.render('admin', { products, count, totalorder });
     })
     .catch((err) => {
       console.log(err);
@@ -195,38 +202,38 @@ app.post('/signin', async (req, res) => {
         "<script>alert('Invalid email or password!'); window.location='/signin';</script>"
       );
     }
-    res.redirect("/admin");
+    res.redirect('/admin');
   } catch (err) {
     console.log(err);
     res.send('Something went wrong!');
   }
 });
-// checkout 
+// checkout
 // GET checkout page
-app.get("/products/cart/checkout", async (req, res) => {
+app.get('/products/cart/checkout', async (req, res) => {
   try {
-    const cartItems = await Cart.find(); 
-    res.render("checkout", { cartItems });
+    const cartItems = await Cart.find();
+    res.render('checkout', { cartItems });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error loading checkout");
+    res.status(500).send('Error loading checkout');
   }
 });
 
 // POST checkout (handle order)
-app.post("/products/cart/checkout", async (req, res) => {
+app.post('/products/cart/checkout', async (req, res) => {
   const { username, email, payment } = req.body;
-  console.log("Order received:", username, email, payment);
+  console.log('Order received:', username, email, payment);
   let cartitem = await Cart.find();
   await Customer({
     username: username,
     email: email,
-    orders: cartitem
+    orders: cartitem,
   }).save();
   await Cart.deleteMany({});
   // yahan aap order save kar sakte ho DB me
 
-  res.redirect("/products")
+  res.redirect('/products');
 });
 
 // add to cart
@@ -253,12 +260,12 @@ app.get('/products/cart', async (req, res) => {
 // Calculatebill
 function Calculatebill(prod) {
   let sum = 0;
-  prod.forEach(product => {
+  prod.forEach((product) => {
     sum = sum + product.price;
-  })
+  });
   return sum;
 }
-// calculate the total register and order 
+// calculate the total register and order
 async function order() {
   let a = await Customer.countDocuments();
   return a;
@@ -267,10 +274,37 @@ async function order() {
 app.post('/products/cart/remove/:id', async (req, res) => {
   try {
     await Cart.findByIdAndDelete(req.params.id);
-    res.redirect("/products/cart");
+    res.redirect('/products/cart');
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error removing item");
+    res.status(500).send('Error removing item');
   }
 });
 
+// email send funcitonalties
+app.get('/sub', async (req, res) => {
+  const { email } = req.query;
+  console.log('📩 Received email from form:', email);
+
+  if (!email) {
+    return res.send(
+      "<script>alert('Please enter a valid email!'); window.location='/';</script>"
+    );
+  }
+
+  try {
+    await sendEmail(email);
+    res.send(
+      "<script>alert('Subscription successful! Check your email!'); window.location='/';</script>"
+    );
+  } catch (err) {
+    console.error('❌ Email error:', err);
+    res.send(
+      "<script>alert('Error sending email! Try again.'); window.location='/';</script>"
+    );
+  }
+});
+// user or customer panel
+app.get("/user", (req, res) => {
+  res.render("customer")
+})

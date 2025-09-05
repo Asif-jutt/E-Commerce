@@ -455,7 +455,7 @@
           <a href="/products"><i class="fas fa-shopping-bag"></i> Products</a>
         </li>
         <li>
-          <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+          <a href="/user"><i class="fas fa-info-circle"></i> Customer</a>
         </li>
         <li>
           <a href="/signin"><i class="fas fa-user-cog"></i> Admin</a>
@@ -499,7 +499,7 @@
             >
           </li>
           <li>
-            <a href="/about"><i class="fas fa-chevron-right"></i> About Us</a>
+            <a href="/user"><i class="fas fa-chevron-right"></i> About Us</a>
           </li>
           <li>
             <a href="/signin"
@@ -526,12 +526,13 @@
           Subscribe to our newsletter for updates on new products and special
           offers.
         </p>
-        <input type="email" placeholder="Enter your email" />
-        <button>Subscribe</button>
+        <form action="/sub" method="get">
+          <input type="email" name="email" required />
+          <button type="submit">Subscribe</button>
+        </form>
       </div>
       <div class="footer-bottom">&copy; 2025 MyShop | All Rights Reserved</div>
     </footer>
-
     <script>
       // Mobile menu toggle
       const mobileMenu = document.getElementById('mobile-menu');

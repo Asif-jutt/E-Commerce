@@ -1,69 +1,101 @@
 const nodemailer = require('nodemailer');
-
-async function sendEmail() {
+require('dotenv').config();
+async function sendEmail(toEmail) {
   try {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'asifhussain5115@gmail.com',
-        pass: 'umufazevltisxktj', // app password (no spaces)
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
     const info = await transporter.sendMail({
       from: '"E-Commerce Store" <asifhussain5115@gmail.com>',
-      to: '2023cs646@gmail.com',
-      subject: '🎉 Welcome to Our E-Commerce Store!',
-      text: 'You have successfully logged in to our E-Commerce platform. Welcome!',
+      to: toEmail,
+      subject: 'Welcome to Our E-Commerce Community - Exclusive Benefits Await!',
+      text: `Thank you for subscribing to our E-Commerce platform. You'll now receive exclusive updates, promotions, and early access to new products. Welcome to our community!`,
       html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4;">
-          <div style="max-width: 600px; margin: auto; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            
-            <div style="background: #4CAF50; color: white; padding: 20px; text-align: center;">
-              <h1>Welcome to E-Commerce</h1>
-            </div>
-            
-            <div style="padding: 20px; text-align: center;">
-              <h2>🎊 Login Successful!</h2>
-              <p style="font-size: 16px; color: #333;">
-                Hello <b>User</b>, you have successfully logged into your E-Commerce account.
-              </p>
-              
-              <div style="margin: 20px 0;">
-                <div style="background:#f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-                  <h3>🛒 Explore Products</h3>
-                  <p>Check out the latest gadgets, fashion, and accessories available now.</p>
-                </div>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Welcome to Our E-Commerce Store</title>
+        </head>
+        <body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f7f7f7;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto; max-width: 600px;">
+                <!-- Header -->
+                <tr>
+                    <td style="padding: 20px 0; text-align: center; background-color: #ffffff; border-bottom: 1px solid #eeeeee;">
+                        <img src="https://via.placeholder.com/200x50/4CAF50/ffffff?text=E-Commerce+Store" alt="E-Commerce Store Logo" style="max-width: 200px;">
+                    </td>
+                </tr>
                 
-                <div style="background:#f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-                  <h3>💳 Easy Payments</h3>
-                  <p>Pay securely using multiple payment options.</p>
-                </div>
+                <!-- Hero Section -->
+                <tr>
+                    <td style="background-color: #4CAF50; padding: 40px 20px; text-align: center; color: #ffffff;">
+                        <h1 style="margin: 0; font-size: 28px; font-weight: bold;">Welcome to Our E-Commerce Family!</h1>
+                        <p style="margin: 15px 0 0; font-size: 16px; opacity: 0.9;">Your subscription has been confirmed</p>
+                    </td>
+                </tr>
                 
-                <div style="background:#f9f9f9; padding: 15px; border-radius: 8px;">
-                  <h3>🚚 Fast Delivery</h3>
-                  <p>Get your favorite products delivered to your doorstep quickly.</p>
-                </div>
-              </div>
-
-              <a href="http://localhost:3000" 
-                style="display: inline-block; background: #4CAF50; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
-                Start Shopping
-              </a>
-            </div>
-            
-            <div style="background: #eee; color: #555; text-align: center; padding: 15px; font-size: 12px;">
-              &copy; 2025 E-Commerce Store. All rights reserved.
-            </div>
-          </div>
-        </div>
+                <!-- Content Section -->
+                <tr>
+                    <td style="padding: 30px 20px; background-color: #ffffff;">
+                        <p style="margin: 0 0 20px; color: #333333; line-height: 1.6;">Hello valued customer,</p>
+                        <p style="margin: 0 0 20px; color: #333333; line-height: 1.6;">Thank you for subscribing to our newsletter. You've taken the first step toward enjoying a more personalized shopping experience with exclusive benefits:</p>
+                        
+                        <ul style="margin: 0 0 20px; padding-left: 20px; color: #333333; line-height: 1.6;">
+                            <li>First access to new product launches</li>
+                            <li>Exclusive subscriber-only discounts</li>
+                            <li>Seasonal promotions and special offers</li>
+                            <li>Curated product recommendations</li>
+                        </ul>
+                        
+                        <p style="margin: 0 0 25px; color: #333333; line-height: 1.6;">We're committed to bringing you the best products at competitive prices with exceptional service.</p>
+                        
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td align="center">
+                                    <a href="http://localhost:8080" style="display: inline-block; background-color: #4CAF50; color: #ffffff; text-decoration: none; padding: 14px 30px; border-radius: 4px; font-weight: bold; font-size: 16px;">Explore Our Collection</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <!-- Additional Benefits -->
+                <tr>
+                    <td style="padding: 25px 20px; background-color: #f9f9f9;">
+                        <h3 style="margin: 0 0 15px; color: #333333; font-size: 18px;">What to Expect Next</h3>
+                        <p style="margin: 0; color: #666666; line-height: 1.6; font-size: 14px;">You'll receive our weekly newsletter every Tuesday featuring new arrivals, special promotions, and style inspiration. We carefully curate our communications to ensure they provide real value.</p>
+                    </td>
+                </tr>
+                
+                <!-- Footer -->
+                <tr>
+                    <td style="padding: 20px; text-align: center; background-color: #eeeeee; color: #666666; font-size: 12px;">
+                        <p style="margin: 0 0 10px;">&copy; 2025 E-Commerce Store. All rights reserved.</p>
+                        <p style="margin: 0 0 10px; font-size: 11px;">123 Commerce Street, Business District, City, Country</p>
+                        <p style="margin: 0;">
+                            <a href="#" style="color: #4CAF50; text-decoration: none;">Privacy Policy</a> | 
+                            <a href="#" style="color: #4CAF50; text-decoration: none;">Terms of Service</a> | 
+                            <a href="#" style="color: #4CAF50; text-decoration: none;">Unsubscribe</a>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>
       `,
     });
 
-    console.log('✅ Message sent:', info.messageId);
+    console.log('✅ Message sent to:', toEmail, info.messageId);
   } catch (err) {
     console.error('❌ Email error:', err);
+    throw err;
   }
 }
 
-sendEmail();
+module.exports = sendEmail;

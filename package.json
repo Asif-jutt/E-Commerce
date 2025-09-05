@@ -3,16 +3,18 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "author": "Asif Hussain",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^17.2.2",
     "ejs": "^3.1.10",
     "ejs-mate": "^4.0.0",
     "express": "^5.1.0",
     "mongoose": "^8.18.0",
-    "nodemailer": "^7.0.5"
+    "nodemailer": "^7.0.6"
   }
 }
