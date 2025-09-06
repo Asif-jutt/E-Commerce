@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = require('mongoose');
 const products = require('./product.js');
+const { Review } = require("./review.js");
 // mongoose
 //   .connect('mongodb://127.0.0.1:27017/ecommerce')
 //   .then(() => console.log('✅ MongoDB Connected'))
@@ -23,6 +24,12 @@ const ProductSchema = new mongoose.Schema({
     required: true,
     default: 'https://picsum.photos/seed/p2/200/200',
   },
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref:'Review',
+    }
+  ]
 });
 const Cart = new mongoose.model('Cart', ProductSchema);
 const Product = new mongoose.model('Product', ProductSchema);
