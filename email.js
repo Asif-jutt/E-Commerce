@@ -58,7 +58,7 @@ async function sendEmail(toEmail) {
                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                             <tr>
                                 <td align="center">
-                                    <a href="http://localhost:8080" style="display: inline-block; background-color: #4CAF50; color: #ffffff; text-decoration: none; padding: 14px 30px; border-radius: 4px; font-weight: bold; font-size: 16px;">Explore Our Collection</a>
+                                    <a href="https://e-commerce-9w57.onrender.com/ style="display: inline-block; background-color: #4CAF50; color: #ffffff; text-decoration: none; padding: 14px 30px; border-radius: 4px; font-weight: bold; font-size: 16px;">Explore Our Collection</a>
                                 </td>
                             </tr>
                         </table>

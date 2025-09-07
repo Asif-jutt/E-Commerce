@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = require('mongoose');
 const products = require('./product.js');
-const Cart = require("./index.js");
+const { Cart } = require("./index.js");
 // mongoose
 //   .connect('mongodb://127.0.0.1:27017/ecommerce')
 //   .then(() => console.log('✅ MongoDB Connected'))
