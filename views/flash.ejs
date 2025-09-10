@@ -1,13 +1,80 @@
 <% if (success && success.length > 0) { %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <%= success %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+  <div class="flash-message success" role="alert">
+    <span><%= success %></span>
+    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+  </div>
 <% } %>
 
 <% if (error && error.length > 0) { %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <%= error %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+  <div class="flash-message error" role="alert">
+    <span><%= error %></span>
+    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+  </div>
 <% } %>
+
+<style>
+.flash-message {
+  max-width: 600px;
+  width: 90%; /* Make it responsive */
+  margin: 1.5rem auto; /* Consistent margin */
+  padding: 1rem 1.5rem; /* Better padding */
+  border-radius: 8px; /* Softer corners */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistent with previous styles */
+  font-size: 1rem; /* Standard size */
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+  border-left: 5px solid; /* Add a distinct border for color coding */
+}
+
+.flash-message.success {
+  background-color: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+}
+
+.flash-message.error {
+  background-color: #f8d7da;
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+.flash-message .close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem; /* Larger and more tappable */
+  font-weight: bold;
+  color: inherit;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.6; /* Slightly transparent */
+  transition: opacity 0.2s ease;
+}
+
+.flash-message .close-btn:hover {
+  opacity: 1; /* Full opacity on hover */
+}
+
+/* Responsive adjustment for very small screens */
+@media (max-width: 480px) {
+  .flash-message {
+    padding: 0.8rem 1rem; /* Adjust padding on smaller screens */
+    font-size: 0.9rem; /* Slightly smaller font */
+  }
+}
+</style>
+
+<script>
+  // Hide the flash message after 4 seconds
+  setTimeout(() => {
+    document.querySelectorAll('.flash-message').forEach(el => {
+      el.style.opacity = '0';
+      // Wait for the fade-out transition to complete before hiding
+      setTimeout(() => el.remove(), 1000); 
+    });
+  }, 4000);
+</script>

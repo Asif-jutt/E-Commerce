@@ -21,6 +21,7 @@ router.post(
       
       req.login(user, err => {
         if (err) return next(err);
+        req.flash('success', 'Admin registered Successfully, Wellcome to Admin Userinterface');
         res.redirect('/admin');
       });
 

@@ -3,6 +3,8 @@ const router = express('Router');
 const asyncwrap = require('../init/asyncwrap');
 const { Product } = require('../init/index');
 const { Review } = require('../init/review');
+const islogin = require('../init/isloginadmin');
+
 router.get(
   '/admin/view/:id',
   asyncwrap(async (req, res) => {
@@ -26,7 +28,7 @@ router.post(
       createdat: Date.now(),
     });
     review.save();
-    req.flash('addreview', 'Review Added Successfully..');
+    req.flash('success', 'Review Added Successfully..');
     prod.reviews.push(review);
     console.log(review);
     await prod.save();
@@ -36,7 +38,7 @@ router.post(
 
 // Delete the reviews
 router.post(
-  '/admin/view/:id/reviews/:reviewid',
+  '/admin/view/:id/reviews/:reviewid',islogin,
   asyncwrap(async (req, res) => {
     const { id, reviewid } = req.params;
 
@@ -49,7 +51,7 @@ router.post(
     prod.reviews = prod.reviews.filter((r) => r.toString() !== reviewid);
     await prod.save();
     await Review.findByIdAndDelete(reviewid);
-    req.flash('delreview', "Review deleted Successfully...");
+    req.flash('success', "Review deleted Successfully...");
     res.redirect(`/admin/view/${id}`); // back to product page
   })
 );

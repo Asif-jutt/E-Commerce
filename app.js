@@ -71,15 +71,20 @@ passport.deserializeUser(Admin.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated ? req.isAuthenticated() : false;
-  res.locals.delreview = req.flash('delreview');
-  res.locals.addreview = req.flash('addreview');
-  res.locals.delprod = req.flash('delprod');
-  res.locals.addprod = req.flash('addprod');
-  res.locals.updateprod = req.flash('updateprod');
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
+  
+  if (req.user) {
+    res.locals.user = req.user.username;
+    res.locals.email = req.user.email;
+  } else {
+    res.locals.user = null;
+    res.locals.email = null;
+  }
+
   next();
-})
+});
+
 
 // All routes
 app.use('/', productroute);

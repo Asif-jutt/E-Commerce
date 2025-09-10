@@ -6,7 +6,6 @@
     <title>Admin Panel Template</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-      
         /* Reset and Base Styles */
         * {
             margin: 0;
@@ -284,7 +283,6 @@
     </style>
 </head>
 <body>
-
     <!-- Top Navigation Bar -->
     <nav class="navbar">
         <a href="/admin" class="navbar-brand">
@@ -318,9 +316,9 @@
     </a>
 <% } %>
 
-        </div>
+      </div>
     </nav>
-
+<%- include('../flash.ejs') %>
     <!-- Main Content Area -->
     <%- body %>
 

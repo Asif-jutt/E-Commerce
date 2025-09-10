@@ -3,7 +3,7 @@ const router = express.Router();
 const asyncwrap = require('../init/asyncwrap');
 const { Product, Cart } = require('../init/index');
 const { Customer } = require('../init/customer');
-
+const islogin=require('../init/isloginadmin')
 
 router.get(
   '/products/cart/checkout',
@@ -21,7 +21,7 @@ router.post(
     res.redirect('/products/cart');
 }))
 router.get(
-  '/products/cart',
+  '/products/cart',islogin,
   asyncwrap(async (req, res) => {
     const prod = await Cart.find();
     const bill = prod.reduce((sum, p) => sum + p.price, 0);

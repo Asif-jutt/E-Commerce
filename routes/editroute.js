@@ -3,10 +3,11 @@ const router = express('Router');
 const asyncwrap = require('../init/asyncwrap');
 const { Product } = require('../init/index');
 const { Review } = require('../init/review');
+const islogin = require('../init/isloginadmin');
 
 
 router.get(
-  '/admin/edit/:id',
+  '/admin/edit/:id',islogin,
   asyncwrap(async (req, res) => {
     const { id } = req.params;
     const prod = await Product.findById(id);
@@ -16,7 +17,7 @@ router.get(
 );
 
 router.post(
-  '/admin/edit/:id',
+  '/admin/edit/:id',islogin,
   asyncwrap(async (req, res) => {
     const { id } = req.params;
     const { item, price, stock, image } = req.body;
@@ -28,7 +29,7 @@ router.post(
       product.image = image;
       await product.save();
     }
-    req.flash('updateprod',"Update Product Successfully...")
+    req.flash('success',"Update Product Successfully...")
     res.redirect('/admin');
   })
 );

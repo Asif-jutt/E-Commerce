@@ -3,6 +3,7 @@ const router = express.Router();
 const asyncwrap = require('../init/asyncwrap');
 const { Admin } = require('../init/adminuser');
 const passport = require('passport');
+const {setUrl} = require('../init/isloginadmin');
 router.get(
   '/signin',
   asyncwrap(async (req, res) => {
@@ -11,13 +12,16 @@ router.get(
 );
 
 router.post(
-  '/signin', passport.authenticate('local', {
+  '/signin',
+    setUrl,
+     passport.authenticate('local', {
     failureRedirect: '/signin',
     failureFlash : true
   }),
   asyncwrap(async (req, res) => {
     req.flash('success', 'Wellcome to E-Commerce as Admin ,' + req.user.username);
-    res.redirect('/admin');
+    let urlredirect = res.locals.Urlredirect || "/admin";
+    res.redirect(urlredirect);
   })
 );
 // logout
