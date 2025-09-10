@@ -1,90 +1,307 @@
-<% layout("./layouts/boilerplate") %>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            height: 100vh;
-            display: center;
-            justify-content: center;
-            align-items: center;
-            background: url("https://images.unsplash.com/photo-1542293787938-c9e299b880f3") no-repeat center center/cover;
-        }
-        .signin-container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            width: 350px;
-            margin-left: 35%;
-        }
-        .signin-container h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-        }
-        .input-group {
-            margin-bottom: 20px;
-        }
-        .input-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-        }
-        .signin-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .signin-btn:hover {
-            background-color: #0056b3;
-        }
-        .footer-text {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        .footer-text a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .footer-text a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="signin-container">
-        <h2>Sign In</h2>
-        <form action="/signin" method="POST">
-            <div class="input-group">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" placeholder="Enter your email" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" placeholder="Enter your password" required>
-            </div>
-            <button type="submit" class="signin-btn">Sign In</button>
-        </form>
-        <div class="footer-text">
-            Don't have an account? <a href="/signup">Sign Up</a>
+<% layout('./layouts/adminboilerplate') %>
+<div class="signin-container">
+  <div class="signin-wrapper">
+    <div class="signin-card">
+      <div class="signin-header">
+        <div class="signin-icon">
+          <i class="fas fa-lock"></i>
         </div>
+        <h2>Admin Sign In</h2>
+        <p>Enter your credentials to access the dashboard</p>
+      </div>
+      
+      <form class="signin-form" action="/signin" method="POST">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-with-icon">
+            <i class="fas fa-key"></i>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+          </div>
+        </div>
+        
+        <div class="form-options">
+          <label class="checkbox-container">
+            <input type="checkbox" id="remember" name="remember">
+            <span class="checkmark"></span>
+            Remember me
+          </label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+        
+        <button type="submit" class="signin-btn">
+          <span class="btn-text">Sign In</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+      
+      <div class="signin-footer">
+        <p>Don't have an account? <a href="/signup" class="signup-link">Sign Up</a></p>
+      </div>
     </div>
-</body>
+  </div>
+</div>
+
+<style>
+  .signin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  }
+  
+  .signin-wrapper {
+    width: 100%;
+    max-width: 420px;
+  }
+  
+  .signin-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    transition: transform 0.3s ease;
+  }
+  
+  .signin-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .signin-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .signin-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+  }
+  
+  .signin-header h2 {
+    color: #2d3748;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  
+  .signin-header p {
+    color: #718096;
+    font-size: 14px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .input-with-icon {
+    position: relative;
+  }
+  
+  .input-with-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+  }
+  
+  .input-with-icon input {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s;
+    background-color: #f8fafc;
+  }
+  
+  .input-with-icon input:focus {
+    outline: none;
+    border-color: #4776E6;
+    box-shadow: 0 0 0 3px rgba(72, 119, 230, 0.1);
+    background-color: white;
+  }
+  
+  .form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+  
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #4a5568;
+  }
+  
+  .checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .checkmark {
+    position: absolute;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+  }
+  
+  .checkbox-container input:checked ~ .checkmark {
+    background-color: #4776E6;
+    border-color: #4776E6;
+  }
+  
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  .checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  .checkbox-container .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+  .forgot-link {
+    color: #4776E6;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+  }
+  
+  .forgot-link:hover {
+    color: #8E54E9;
+    text-decoration: underline;
+  }
+  
+  .signin-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+  }
+  
+  .signin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(72, 119, 230, 0.4);
+  }
+  
+  .signin-footer {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    color: #718096;
+    font-size: 14px;
+  }
+  
+  .signup-link {
+    color: #4776E6;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+  
+  .signup-link:hover {
+    color: #8E54E9;
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 576px) {
+    .signin-card {
+      padding: 25px;
+    }
+    
+    .form-options {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .forgot-link {
+      margin-left: 30px;
+    }
+  }
+</style>
+
+<!-- <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.signin-form');
+    
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const submitBtn = form.querySelector('.signin-btn');
+      const originalText = submitBtn.querySelector('.btn-text').textContent;
+      
+      // Simulate loading
+      submitBtn.querySelector('.btn-text').textContent = 'Signing in...';
+      submitBtn.disabled = true;
+      
+      // Simulate API call
+      setTimeout(() => {
+        // In a real application, you would submit the form to your server
+        // form.submit();
+        
+        // For demo purposes, reset the button after 2 seconds
+        submitBtn.querySelector('.btn-text').textContent = originalText;
+        submitBtn.disabled = false;
+        
+        // Show success message (in a real app, this would be based on server response)
+        alert('Sign in successful! (This is a demo)');
+      }, 2000);
+    });
+  });
+</script> -->

@@ -11,18 +11,24 @@ router.get(
 );
 router.post(
   '/signup',
-  asyncwrap(async (req, res) => {
-    const { email, password } = req.body;
-    const existingUser = await Admin.findOne({ email });
-    if (existingUser) {
-      return res.send(
-        "<script>alert('This email is already taken!'); window.location='/signup'</script>"
-      );
+  asyncwrap(async (req, res, next) => {
+    try {
+      const { email, username, password } = req.body;
+      const adminreg = new Admin({ email, username });
+      let user = await Admin.register(adminreg, password);
+      console.log(user);
+      req.flash('success', 'Admin registered Successfully');
+      
+      req.login(user, err => {
+        if (err) return next(err);
+        res.redirect('/admin');
+      });
+
+    } catch (err) {
+      req.flash('error', "User or email already exist.");
+      res.redirect('/signup');
     }
-    await Admin({ email, password }).save();
-    res.send(
-      "<script>alert('New user is successfully added!'); window.location='/admin'</script>"
-    );
   })
 );
+
 module.exports = router;

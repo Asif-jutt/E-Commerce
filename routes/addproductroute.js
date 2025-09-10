@@ -17,6 +17,7 @@ router.post(
   asyncwrap(async (req, res) => {
     const { item, price, stock, image } = req.body;
     await Product({ item, price, stock, image }).save();
+    req.flash('addprod', "Product Add Successfully..");
     res.redirect('/admin');
   })
 );

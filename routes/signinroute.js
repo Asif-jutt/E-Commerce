@@ -1,8 +1,8 @@
 const express = require('express');
-const router = express('Router');
+const router = express.Router();
 const asyncwrap = require('../init/asyncwrap');
 const { Admin } = require('../init/adminuser');
-
+const passport = require('passport');
 router.get(
   '/signin',
   asyncwrap(async (req, res) => {
@@ -11,18 +11,22 @@ router.get(
 );
 
 router.post(
-  '/signin',
+  '/signin', passport.authenticate('local', {
+    failureRedirect: '/signin',
+    failureFlash : true
+  }),
   asyncwrap(async (req, res) => {
-    const user = await Admin.findOne({
-      email: req.body.email,
-      password: req.body.password,
-    });
-    if (!user)
-      return res.send(
-        "<script>alert('Invalid email or password!'); window.location='/signin';</script>"
-      );
+    req.flash('success', 'Wellcome to E-Commerce as Admin ,' + req.user.username);
     res.redirect('/admin');
   })
 );
+// logout
+router.post('/logout', (req, res, next) => {
+  req.logout(err => {
+    if (err) return next(err);
+    res.redirect('/admin');
+  });
+});
+
 
 module.exports = router;

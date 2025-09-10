@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const sendMessageFromUser = require('../contactemail');
+const sendMessageFromUser = require('../init/contactemail');
 const asyncwrap = require('../init/asyncwrap');
 
 // contact us

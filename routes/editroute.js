@@ -28,7 +28,8 @@ router.post(
       product.image = image;
       await product.save();
     }
-    res.redirect('/admin/view/' + id);
+    req.flash('updateprod',"Update Product Successfully...")
+    res.redirect('/admin');
   })
 );
 

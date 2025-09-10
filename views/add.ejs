@@ -1,570 +1,605 @@
-<% layout("./layouts/boilerplate") %>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Product - Admin Panel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #3a0ca3;
-            --secondary: #4361ee;
-            --accent: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4cc9f0;
-            --text: #2b2d42;
-            --gray: #6c757d;
-            --transition: all 0.3s ease;
-            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            --radius: 10px;
-        }
+<% layout('./layouts/adminboilerplate') %>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<style>
+    :root {
+        --primary: #3a0ca3;
+        --primary-light: #4cc9f0;
+        --secondary: #4361ee;
+        --accent: #f72585;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --success: #2ec4b6;
+        --warning: #ff9f1c;
+        --danger: #e71d36;
+        --text: #2b2d42;
+        --gray: #6c757d;
+        --transition: all 0.3s ease;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        --radius: 12px;
+    }
 
-        body {
-            background: #f9f9f9;
-            color: var(--text);
-            line-height: 1.6;
-        }
+    .admin-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
 
-        /* Push content below navbar */
-        main {
-            min-height: 70vh;
-            padding: 120px 50px 40px; /* top padding = navbar height + spacing */
-        }
+    .admin-card {
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        /* Admin Panel Layout */
+    .admin-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background: linear-gradient(120deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 1.5rem;
+        border-bottom: none;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .form-control {
+        padding: 0.875rem 1rem;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        transition: var(--transition);
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(58, 12, 163, 0.15);
+    }
+
+    .form-floating>.form-control:focus~label,
+    .form-floating>.form-control:not(:placeholder-shown)~label {
+        color: var(--primary);
+    }
+
+    .input-group-text {
+        background: var(--light);
+        border: 2px solid #e9ecef;
+        border-left: none;
+    }
+
+    .input-group .form-control {
+        border-right: none;
+    }
+
+    .input-group .form-control:focus + .input-group-text {
+        border-color: var(--primary);
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(120deg, var(--primary), var(--secondary));
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(120deg, var(--secondary), var(--primary));
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(58, 12, 163, 0.2);
+    }
+
+    .btn-outline-secondary {
+        border: 2px solid var(--gray);
+        color: var(--gray);
+    }
+
+    .btn-outline-secondary:hover {
+        background: var(--gray);
+        color: white;
+        border-color: var(--gray);
+    }
+
+    .preview-container {
+        border: 2px dashed #dee2e6;
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        background: var(--light);
+        transition: var(--transition);
+    }
+
+    .preview-container.has-image {
+        border-color: var(--success);
+        background: rgba(46, 196, 182, 0.05);
+    }
+
+    #preview-img {
+        max-width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+    }
+
+    .validation-feedback {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .valid-feedback {
+        color: var(--success);
+    }
+
+    .invalid-feedback {
+        color: var(--danger);
+    }
+
+    .form-step {
+        display: none;
+    }
+
+    .form-step.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .step-indicator {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .step-indicator::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e9ecef;
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+
+    .step {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: var(--gray);
+        position: relative;
+        z-index: 2;
+        transition: var(--transition);
+    }
+
+    .step.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    .step.completed {
+        background: var(--success);
+        border-color: var(--success);
+        color: white;
+    }
+
+    .step-label {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        color: var(--gray);
+    }
+
+    .step.active .step-label {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .navigation-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
         .admin-container {
-            display:flex;
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
+            margin: 1rem auto;
+            padding: 0 0.5rem;
         }
-
-        .admin-sidebar {
-            width: 250px;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            height: fit-content;
+        
+        .card-body {
+            padding: 1.5rem;
         }
-
-        .admin-sidebar h3 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--light);
+        
+        .step-indicator {
+            margin-bottom: 1.5rem;
         }
-
-        .admin-menu {
-            list-style: none;
+        
+        .step {
+            width: 32px;
+            height: 32px;
+            font-size: 0.875rem;
         }
-
-        .admin-menu li {
-            margin-bottom: 10px;
+        
+        .navigation-buttons {
+            flex-direction: column;
         }
-
-        .admin-menu a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 15px;
-            color: var(--text);
-            text-decoration: none;
-            border-radius: var(--radius);
-            transition: var(--transition);
-        }
-
-        .admin-menu a:hover,
-        .admin-menu a.active {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .admin-menu i {
-            width: 20px;
-            text-align: center;
-        }
-
-        .admin-content {
-            flex: 1;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 30px;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .admin-title {
-            color: var(--primary);
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Form Styles */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--radius);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-
-        textarea.form-control {
-            min-height: 120px;
-            resize: vertical;
-        }
-
+        
         .btn {
-            padding: 12px 25px;
-            border-radius: var(--radius);
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
+            width: 100%;
+            justify-content: center;
         }
+    }
+</style>
 
-        .btn-primary {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: var(--gray);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-
-        .image-preview {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .image-preview img {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            border: 1px solid #ddd;
-        }
-
-        .url-input-container {
-            display: flex;
-            gap: 10px;
-        }
-
-        .url-input-container .form-control {
-            flex: 1;
-        }
-
-        .test-image-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 15px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
-        .test-image-btn:hover {
-            background: #d81159;
-        }
-
-        .preview-wrapper {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            margin-top: .5rem;
-        }
-
-        #preview-img {
-            max-width: 160px;
-            max-height: 160px;
-            object-fit: cover;
-            border-radius: .375rem;
-            border: 1px solid #e6e6e6;
-        }
-
-        /* Validation styles */
-        .was-validated .form-control:valid {
-            border-color: #198754;
-            padding-right: calc(1.5em + 0.75rem);
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right calc(0.375em + 0.1875rem) center;
-            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-        }
-
-        .was-validated .form-control:invalid {
-            border-color: #dc3545;
-            padding-right: calc(1.5em + 0.75rem);
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3cpath d='M6 7v2'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right calc(0.375em + 0.1875rem) center;
-            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            main {
-                padding: 120px 30px 40px;
-            }
-
-            .admin-container {
-                flex-direction: column;
-            }
-
-            .admin-sidebar {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .url-input-container {
-                flex-direction: column;
-            }
-            
-            .preview-wrapper {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-
-        @media (max-width: 576px) {
-            main {
-                padding: 100px 20px 30px;
-            }
-
-            .admin-content {
-                padding: 20px;
-            }
-
-            .admin-title {
-                font-size: 20px;
-            }
-
-            .admin-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-        }
-    </style>
-</head>
-<body class="p-4">
-    <!-- Page Content -->
-    <main>
-        <div class="admin-container">
-            <!-- Sidebar -->
-            <div class="admin-sidebar">
-                <h3>Admin Panel</h3>
-                <ul class="admin-menu">
-                    <li>
-                        <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="/products" class="active"><i class="fas fa-box"></i> Products</a>
-                    </li>
-                    <li>
-                        <a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
-                    </li>
-                    <li>
-                        <a href="/admin"><i class="fas fa-users"></i> Customers</a>
-                    </li>
-                    <li>
-                        <a href="/admin"><i class="fas fa-arrow-left"></i> Back to Store</a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Main Content -->
-            <div class="admin-content">
-                <div class="admin-header">
-                    <h1 class="admin-title">
-                        <i class="fas fa-plus-circle"></i> Add New Product
-                    </h1>
-                    <a href="/admin" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Products</a>
-                </div>
-
-                <form class="row g-3 needs-validation" id="add-product-form" action="/admin/add" method="POST" novalidate>
-                    <div class="col-md-6">
-                        <label for="item" class="form-label">Product Name *</label>
-                        <input type="text" class="form-control" id="item" name="item" placeholder="Enter product name" required>
-                        <div class="valid-feedback">Looks good!</div>
-                        <div class="invalid-feedback">Please enter a product name.</div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label for="price" class="form-label">Price ($) *</label>
-                        <input type="number" class="form-control" id="price" name="price" placeholder="0.00" step="0.01" min="0.01" required>
-                        <div class="valid-feedback">Looks good!</div>
-                        <div class="invalid-feedback">Please enter a valid price (minimum $0.01).</div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label for="stock" class="form-label">Stock Quantity *</label>
-                        <input type="number" class="form-control" id="stock" name="stock" placeholder="0" min="0" required>
-                        <div class="valid-feedback">Looks good!</div>
-                        <div class="invalid-feedback">Please enter stock quantity.</div>
-                    </div>
-
-                    <div class="col-12">
-                        <label for="image" class="form-label">Image URL *</label>
-                        <div class="input-group has-validation">
-                            <input type="url" class="form-control" id="image" name="image" placeholder="https://example.com/image.jpg" required>
-                            <button type="button" class="btn btn-outline-secondary" id="test-image-btn">Test Image</button>
-                            <div class="invalid-feedback" id="image-invalid">Please provide a valid image URL.</div>
-                        </div>
-                        <div class="preview-wrapper mt-2">
-                            <img id="preview-img" src="https://picsum.photos/seed/p2/200/200" alt="preview">
-                            <div class="small text-muted" id="preview-text">Image preview will appear here</div>
-                        </div>
-                    </div>
-
-                    <div class="col-12">
-                        <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Add Product</button>
-                        <button class="btn btn-secondary" type="reset" id="reset-btn"><i class="fas fa-times"></i> Reset Form</button>
-                    </div>
-                </form>
+<div class="admin-container">
+    <div class="admin-card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="h4 mb-0"><i class="fas fa-plus-circle me-2"></i> Add New Product</h2>
+                <a href="/admin/products" class="btn btn-light btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Products
+                </a>
             </div>
         </div>
-    </main>
+        
+        <div class="card-body">
+            <!-- Step Indicator -->
+            <div class="step-indicator mb-4">
+                <div class="step active" id="step1">
+                    1
+                    <span class="step-label">Basic Info</span>
+                </div>
+                <div class="step" id="step2">
+                    2
+                    <span class="step-label">Image</span>
+                </div>
+                <div class="step" id="step3">
+                    3
+                    <span class="step-label">Review</span>
+                </div>
+            </div>
+            
+            <form class="needs-validation" id="add-product-form" action="/admin/add" method="POST" novalidate>
+                <!-- Step 1: Basic Information -->
+                <div class="form-step active" id="step1-form">
+                    <h5 class="mb-4 text-primary"><i class="fas fa-info-circle me-2"></i>Product Information</h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="item" name="item" placeholder="Product Name" required>
+                                <label for="item"><i class="fas fa-tag me-2 text-muted"></i>Product Name *</label>
+                            </div>
+                            <div class="validation-feedback valid-feedback">
+                                <i class="fas fa-check-circle"></i> Looks good!
+                            </div>
+                            <div class="validation-feedback invalid-feedback">
+                                <i class="fas fa-exclamation-circle"></i> Please enter a product name.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="price" name="price" placeholder="Price" step="0.01" min="0.01" required>
+                                <label for="price"><i class="fas fa-dollar-sign me-2 text-muted"></i>Price ($) *</label>
+                            </div>
+                            <div class="validation-feedback valid-feedback">
+                                <i class="fas fa-check-circle"></i> Looks good!
+                            </div>
+                            <div class="validation-feedback invalid-feedback">
+                                <i class="fas fa-exclamation-circle"></i> Please enter a valid price.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="stock" name="stock" placeholder="Stock" min="0" required>
+                                <label for="stock"><i class="fas fa-boxes me-2 text-muted"></i>Stock *</label>
+                            </div>
+                            <div class="validation-feedback valid-feedback">
+                                <i class="fas fa-check-circle"></i> Looks good!
+                            </div>
+                            <div class="validation-feedback invalid-feedback">
+                                <i class="fas fa-exclamation-circle"></i> Please enter stock quantity.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <div></div> <!-- Empty div for spacing -->
+                        <button type="button" class="btn btn-primary" id="next-to-step2">
+                            Next <i class="fas fa-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Image -->
+                <div class="form-step" id="step2-form">
+                    <h5 class="mb-4 text-primary"><i class="fas fa-image me-2"></i>Product Image</h5>
+                    
+                    <div class="mb-3">
+                        <label for="image" class="form-label fw-semibold"><i class="fas fa-link me-2 text-muted"></i>Image URL *</label>
+                        <div class="input-group">
+                            <input type="url" class="form-control" id="image" name="image" placeholder="https://example.com/image.jpg" required>
+                            <button type="button" class="btn btn-outline-primary" id="test-image-btn">
+                                <i class="fas fa-eye me-1"></i> Preview
+                            </button>
+                        </div>
+                        <div class="validation-feedback invalid-feedback">
+                            <i class="fas fa-exclamation-circle"></i> Please provide a valid image URL.
+                        </div>
+                    </div>
+                    
+                    <div class="preview-container text-center" id="preview-container">
+                        <img id="preview-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%23f8f9fa'/%3E%3Cpath d='M80 60L70 75L85 85L75 100H125L115 85L130 75L120 60H80Z' fill='%236c757d'/%3E%3Ctext x='100' y='135' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%236c757d'%3EImage preview%3C/text%3E%3C/svg%3E" 
+                             alt="Preview" class="img-fluid mb-2">
+                        <p class="text-muted mb-0" id="preview-text">Image preview will appear here</p>
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-outline-secondary" id="back-to-step1">
+                            <i class="fas fa-arrow-left me-1"></i> Back
+                        </button>
+                        <button type="button" class="btn btn-primary" id="next-to-step3">
+                            Next <i class="fas fa-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Review -->
+                <div class="form-step" id="step3-form">
+                    <h5 class="mb-4 text-primary"><i class="fas fa-clipboard-check me-2"></i>Review Product</h5>
+                    
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h6 class="card-title mb-3">Product Details</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Product Name:</strong> <span id="review-name" class="text-primary">-</span></p>
+                                    <p><strong>Price:</strong> <span id="review-price" class="text-primary">-</span></p>
+                                    <p><strong>Stock:</strong> <span id="review-stock" class="text-primary">-</span></p>
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <img id="review-image" src="" alt="Product image" class="img-thumbnail" style="max-height: 150px; display: none;">
+                                    <p class="text-muted mt-2" id="review-image-text">No image preview available</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="confirmation" required>
+                        <label class="form-check-label" for="confirmation">
+                            I confirm that all product information is correct
+                        </label>
+                        <div class="validation-feedback invalid-feedback">
+                            <i class="fas fa-exclamation-circle"></i> Please confirm before submitting.
+                        </div>
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-outline-secondary" id="back-to-step2">
+                            <i class="fas fa-arrow-left me-1"></i> Back
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check me-1"></i> Add Product
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('add-product-form');
-            const imageInput = document.getElementById('image');
-            const previewImg = document.getElementById('preview-img');
-            const previewText = document.getElementById('preview-text');
-            const testImageBtn = document.getElementById('test-image-btn');
-            const resetBtn = document.getElementById('reset-btn');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Step management
+        const steps = document.querySelectorAll('.form-step');
+        const stepIndicators = document.querySelectorAll('.step');
+        let currentStep = 1;
+        
+        // Form elements
+        const form = document.getElementById('add-product-form');
+        const itemInput = document.getElementById('item');
+        const priceInput = document.getElementById('price');
+        const stockInput = document.getElementById('stock');
+        const imageInput = document.getElementById('image');
+        const previewImg = document.getElementById('preview-img');
+        const previewText = document.getElementById('preview-text');
+        const previewContainer = document.getElementById('preview-container');
+        const testImageBtn = document.getElementById('test-image-btn');
+        
+        // Review elements
+        const reviewName = document.getElementById('review-name');
+        const reviewPrice = document.getElementById('review-price');
+        const reviewStock = document.getElementById('review-stock');
+        const reviewImage = document.getElementById('review-image');
+        const reviewImageText = document.getElementById('review-image-text');
+        
+        // Navigation buttons
+        const nextToStep2Btn = document.getElementById('next-to-step2');
+        const nextToStep3Btn = document.getElementById('next-to-step3');
+        const backToStep1Btn = document.getElementById('back-to-step1');
+        const backToStep2Btn = document.getElementById('back-to-step2');
+        
+        // Show step function
+        function showStep(stepNumber) {
+            steps.forEach(step => step.classList.remove('active'));
+            document.getElementById(`step${stepNumber}-form`).classList.add('active');
             
-            let imageLoaded = false;
-            let lastImageUrl = '';
-            
-            // Test image button functionality
-            testImageBtn.addEventListener('click', function() {
-                const url = imageInput.value.trim();
-                if (!url) {
-                    imageInput.setCustomValidity('Please enter an image URL first');
-                    imageInput.reportValidity();
-                    return;
-                }
-                
-                // Test if the image loads
-                const testImg = new Image();
-                testImg.onload = function() {
-                    previewImg.src = url;
-                    previewText.textContent = 'Image preview:';
-                    imageLoaded = true;
-                    lastImageUrl = url;
-                    imageInput.setCustomValidity('');
-                    imageInput.classList.remove('is-invalid');
-                };
-                testImg.onerror = function() {
-                    imageInput.setCustomValidity('Cannot load image from this URL');
-                    imageInput.reportValidity();
-                    previewText.textContent = 'Error: Cannot load image from this URL';
-                    imageLoaded = false;
-                };
-                testImg.src = url;
-            });
-            
-            // Update preview when URL changes
-            imageInput.addEventListener('input', function() {
-                const url = this.value.trim();
-                if (!url) {
-                    resetPreview();
-                    return;
-                }
-                
-                // Validate URL format
-                try {
-                    new URL(url);
-                    imageInput.setCustomValidity('');
-                } catch (_) {
-                    imageInput.setCustomValidity('Please enter a valid URL');
-                    return;
-                }
-                
-                // Only update preview if it's the same URL that was previously loaded
-                if (imageLoaded && url === lastImageUrl) {
-                    return;
-                }
-                
-                // Reset preview state
-                previewText.textContent = 'Testing image URL...';
-                imageLoaded = false;
-                
-                // Test if the image loads
-                const testImg = new Image();
-                testImg.onload = function() {
-                    previewImg.src = url;
-                    previewText.textContent = 'Image preview:';
-                    imageLoaded = true;
-                    lastImageUrl = url;
-                    imageInput.setCustomValidity('');
-                };
-                testImg.onerror = function() {
-                    previewText.textContent = 'Image will be tested when you submit or click "Test Image"';
-                    imageLoaded = false;
-                };
-                testImg.src = url;
-            });
-            
-            // Form validation on submit
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-                
-                // Check if form is valid
-                if (!form.checkValidity()) {
-                    event.stopPropagation();
-                    form.classList.add('was-validated');
-                    return;
-                }
-                
-                // Additional validation for image URL
-                const url = imageInput.value.trim();
-                if (url && (!imageLoaded || url !== lastImageUrl)) {
-                    // Test the image if it hasn't been tested yet
-                    const testImg = new Image();
-                    testImg.onload = function() {
-                        imageLoaded = true;
-                        lastImageUrl = url;
-                        imageInput.setCustomValidity('');
-                        form.submit(); // Submit the form after image is verified
-                    };
-                    testImg.onerror = function() {
-                        imageInput.setCustomValidity('Cannot load image from this URL. Please fix the URL or use a different one.');
-                        imageInput.reportValidity();
-                        form.classList.add('was-validated');
-                    };
-                    testImg.src = url;
-                } else if (!url) {
-                    imageInput.setCustomValidity('Please enter an image URL');
-                    imageInput.reportValidity();
-                    form.classList.add('was-validated');
-                } else {
-                    // All validations passed, submit the form
-                    form.submit();
+            stepIndicators.forEach((indicator, index) => {
+                indicator.classList.remove('active', 'completed');
+                if (index + 1 === stepNumber) {
+                    indicator.classList.add('active');
+                } else if (index + 1 < stepNumber) {
+                    indicator.classList.add('completed');
                 }
             });
             
-            // Reset form functionality
-            resetBtn.addEventListener('click', function() {
-                // Reset the form validation
-                form.classList.remove('was-validated');
-                
-                // Reset the preview after a short delay to ensure form is cleared
-                setTimeout(function() {
-                    resetPreview();
-                }, 10);
-            });
+            currentStep = stepNumber;
+        }
+        
+        // Validate step 1
+        function validateStep1() {
+            let isValid = true;
             
-            // Function to reset the preview
-            function resetPreview() {
-                previewImg.src = 'https://picsum.photos/seed/p2/200/200';
-                previewText.textContent = 'Image preview will appear here';
-                imageLoaded = false;
-                lastImageUrl = '';
-                imageInput.setCustomValidity('');
+            if (!itemInput.value.trim()) {
+                itemInput.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                itemInput.classList.remove('is-invalid');
             }
             
-            // Validate fields on input
-            const inputs = form.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    if (input.checkValidity()) {
-                        input.classList.remove('is-invalid');
-                        input.classList.add('is-valid');
-                    } else {
-                        input.classList.remove('is-valid');
-                        input.classList.add('is-invalid');
-                    }
-                });
+            if (!priceInput.value || parseFloat(priceInput.value) < 0.01) {
+                priceInput.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                priceInput.classList.remove('is-invalid');
+            }
+            
+            if (!stockInput.value || parseInt(stockInput.value) < 0) {
+                stockInput.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                stockInput.classList.remove('is-invalid');
+            }
+            
+            return isValid;
+        }
+        
+        // Validate step 2
+        function validateStep2() {
+            if (!imageInput.value.trim()) {
+                imageInput.classList.add('is-invalid');
+                return false;
+            }
+            
+            imageInput.classList.remove('is-invalid');
+            return true;
+        }
+        
+        // Test image URL
+        testImageBtn.addEventListener('click', function() {
+            const url = imageInput.value.trim();
+            if (!url) {
+                imageInput.classList.add('is-invalid');
+                return;
+            }
+            
+            // Test if the image loads
+            const testImg = new Image();
+            testImg.onload = function() {
+                previewImg.src = url;
+                previewText.textContent = 'Image preview:';
+                previewContainer.classList.add('has-image');
+                imageInput.classList.remove('is-invalid');
+            };
+            testImg.onerror = function() {
+                previewText.textContent = 'Error: Cannot load image from this URL';
+                previewContainer.classList.remove('has-image');
+                imageInput.classList.add('is-invalid');
+            };
+            testImg.src = url;
+        });
+        
+        // Update review information
+        function updateReview() {
+            reviewName.textContent = itemInput.value || '-';
+            reviewPrice.textContent = priceInput.value ? '$' + parseFloat(priceInput.value).toFixed(2) : '-';
+            reviewStock.textContent = stockInput.value || '-';
+            
+            if (imageInput.value && previewImg.src !== window.location.href) {
+                reviewImage.src = previewImg.src;
+                reviewImage.style.display = 'block';
+                reviewImageText.style.display = 'none';
+            } else {
+                reviewImage.style.display = 'none';
+                reviewImageText.style.display = 'block';
+            }
+        }
+        
+        // Navigation event listeners
+        nextToStep2Btn.addEventListener('click', function() {
+            if (validateStep1()) {
+                showStep(2);
+            }
+        });
+        
+        nextToStep3Btn.addEventListener('click', function() {
+            if (validateStep2()) {
+                updateReview();
+                showStep(3);
+            }
+        });
+        
+        backToStep1Btn.addEventListener('click', function() {
+            showStep(1);
+        });
+        
+        backToStep2Btn.addEventListener('click', function() {
+            showStep(2);
+        });
+        
+        // Real-time validation for step 1
+        [itemInput, priceInput, stockInput].forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.checkValidity()) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.classList.remove('is-valid');
+                }
             });
         });
-    </script>
-</body>
+        
+        // Form submission
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity() || !document.getElementById('confirmation').checked) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                if (!document.getElementById('confirmation').checked) {
+                    document.getElementById('confirmation').classList.add('is-invalid');
+                }
+            }
+            
+            form.classList.add('was-validated');
+        });
+    });
+</script>

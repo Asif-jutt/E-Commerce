@@ -1,11 +1,11 @@
 const express = require('express');
-const router = express('Router');
+const router = express.Router();
 const asyncwrap = require('../init/asyncwrap');
 const { Product } = require('../init/index');
 const { Customer } = require('../init/customer');
-
+const islogin = require('../init/isloginadmin');
 router.get(
-  '/admin',
+  '/admin',islogin,
   asyncwrap(async (req, res) => {
     const totalorder = await order();
     const count = await countproduct();
@@ -17,9 +17,10 @@ router.get(
 
 
 router.get(
-  '/admin/delete/:id',
+  '/admin/delete/:id',islogin,
   asyncwrap(async (req, res) => {
     await Product.findByIdAndDelete(req.params.id);
+    req.flash('delprod', 'Product Deleted successfully...');
     res.redirect('/admin');
   })
 );

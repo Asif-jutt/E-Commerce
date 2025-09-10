@@ -436,6 +436,7 @@
     </style>
   </head>
   <body>
+    
     <!-- Navbar -->
     <nav class="navbar">
       <div class="logo">
@@ -458,7 +459,7 @@
           <a href="/user"><i class="fas fa-info-circle"></i> Customer</a>
         </li>
         <li>
-          <a href="/signin"><i class="fas fa-user-cog"></i> Admin</a>
+          <a href="/admin"><i class="fas fa-user-cog"></i> Admin</a>
         </li>
         <li>
           <a href="/contact" class="nav-cta"
@@ -467,7 +468,7 @@
         </li>
       </ul>
     </nav>
-
+     <%- include('../flash') %>
     <!-- Page Content -->
     <main><%- body %></main>
 

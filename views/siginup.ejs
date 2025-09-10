@@ -1,119 +1,217 @@
-<% layout("./layouts/boilerplate") %>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-    }
+<% layout("./layouts/adminboilerplate") %>
 
-   body {
-  height: 100vh;
-  background: url("https://images.unsplash.com/photo-1542293787938-c9e299b880f3") no-repeat center;
-  background-size: 400px 300px; /* width x height */
-  background-position: center;
-  background-color: #f5f5f5; /* fallback color */
-  display: center;
-  justify-content: center;
-  align-items: center;
-}
-
-
-    .signup-container {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 40px;
-      border-radius: 15px;
-      width: 350px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      text-align: center;
-      margin-left: 34%;
-    }
-
-    .signup-container h2 {
-      margin-bottom: 20px;
-      font-size: 26px;
-      color: #333;
-    }
-
-    .input-group {
-      margin-bottom: 20px;
-      text-align: left;
-    }
-
-    .input-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #444;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 15px;
-      transition: 0.3s;
-    }
-
-    .input-group input:focus {
-      border-color: #4cafef;
-      outline: none;
-      box-shadow: 0 0 5px #4cafef;
-    }
-
-    .signup-btn {
-      width: 100%;
-      padding: 14px;
-      background: #4cafef;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .signup-btn:hover {
-      background: #2196f3;
-    }
-
-    .extra-text {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #555;
-    }
-
-    .extra-text a {
-      color: #4cafef;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .extra-text a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <div class="signup-container">
-    <h2>Sign Up</h2>
-    <form action="/signup" method="POST">
-      <div class="input-group">
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" required placeholder="Enter your email">
+<div class="signup-container">
+  <div class="signup-card">
+    <div class="signup-header">
+      <i class="fas fa-user-plus"></i>
+      <h2>Create Account</h2>
+      <p>Join us to access exclusive features</p>
+    </div>
+    
+    <form class="signup-form" action="/signup" method="POST">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-with-icon">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" name="username" placeholder="Enter your username" required>
+        </div>
       </div>
-      <div class="input-group">
+      
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <div class="input-with-icon">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" name="password" id="password" required placeholder="Enter your password">
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" name="password" placeholder="Create a password" required>
+          <span class="toggle-password" onclick="togglePassword('password')">
+            <i class="fas fa-eye"></i>
+          </span>
+        </div>
       </div>
-      <button type="submit" class="signup-btn">Sign Up</button>
+      
+      <!-- <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+          <span class="toggle-password" onclick="togglePassword('confirmPassword')">
+            <i class="fas fa-eye"></i>
+          </span>
+        </div>
+      </div> -->
+      
+      <button type="submit" class="signup-btn">
+        <i class="fas fa-user-plus"></i>
+        Sign Up
+      </button>
     </form>
-    <p class="extra-text">Already have an account? <a href="/signin">Login</a></p>
+    
+    <div class="signup-footer">
+      <p>Already have an account? <a href="/signin">Sign In</a></p>
+    </div>
   </div>
-</body>
+</div>
+
+<style>
+  .signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                url("https://images.unsplash.com/photo-1542293787938-c9e299b880f3") no-repeat center center fixed;
+    background-size: cover;
+  }
+  
+  .signup-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .signup-header {
+    margin-bottom: 25px;
+  }
+  
+  .signup-header i {
+    font-size: 40px;
+    color: #4cafef;
+    margin-bottom: 15px;
+  }
+  
+  .signup-header h2 {
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  
+  .signup-header p {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+    font-size: 14px;
+  }
+  
+  .input-with-icon {
+    position: relative;
+  }
+  
+  .input-with-icon i:first-of-type {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+  }
+  
+  .input-with-icon input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s;
+  }
+  
+  .input-with-icon input:focus {
+    border-color: #4cafef;
+    outline: none;
+    box-shadow: 0 0 8px rgba(76, 175, 239, 0.4);
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #777;
+  }
+  
+  .signup-btn {
+    width: 100%;
+    padding: 14px;
+    background: #4cafef;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+  }
+  
+  .signup-btn:hover {
+    background: #2196f3;
+    transform: translateY(-2px);
+  }
+  
+  .signup-btn i {
+    margin-right: 8px;
+  }
+  
+  .signup-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .signup-footer a {
+    color: #4cafef;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  .signup-footer a:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 480px) {
+    .signup-card {
+      padding: 20px;
+    }
+  }
+</style>
+
+<!-- <script>
+  function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const eyeIcon = passwordField.nextElementSibling.querySelector('i');
+    
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      eyeIcon.classList.remove('fa-eye');
+      eyeIcon.classList.add('fa-eye-slash');
+    } else {
+      passwordField.type = 'password';
+      eyeIcon.classList.remove('fa-eye-slash');
+      eyeIcon.classList.add('fa-eye');
+    }
+  }
+</script> -->

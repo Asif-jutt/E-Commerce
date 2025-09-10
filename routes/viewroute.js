@@ -26,6 +26,7 @@ router.post(
       createdat: Date.now(),
     });
     review.save();
+    req.flash('addreview', 'Review Added Successfully..');
     prod.reviews.push(review);
     console.log(review);
     await prod.save();
@@ -47,9 +48,8 @@ router.post(
 
     prod.reviews = prod.reviews.filter((r) => r.toString() !== reviewid);
     await prod.save();
-
     await Review.findByIdAndDelete(reviewid);
-
+    req.flash('delreview', "Review deleted Successfully...");
     res.redirect(`/admin/view/${id}`); // back to product page
   })
 );
