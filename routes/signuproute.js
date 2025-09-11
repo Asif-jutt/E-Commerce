@@ -4,32 +4,37 @@ const asyncwrap = require('../init/asyncwrap');
 const { Admin } = require('../init/adminuser');
 
 router.get(
-  '/signup',
+  '/admin/signup',
   asyncwrap(async (req, res) => {
     res.render('siginup');
   })
 );
 router.post(
-  '/signup',
+  '/admin/signup',
   asyncwrap(async (req, res, next) => {
     try {
       const { email, username, password } = req.body;
       const adminreg = new Admin({ email, username });
-      let user = await Admin.register(adminreg, password);
-      console.log(user);
-      req.flash('success', 'Admin registered Successfully');
-      
-      req.login(user, err => {
-        if (err) return next(err);
-        req.flash('success', 'Admin registered Successfully, Wellcome to Admin Userinterface');
-        res.redirect('/admin');
+      let admin = await Admin.register(adminreg, password);
+
+      await new Promise((resolve, reject) => {
+        req.login(admin, (err) => {
+          if (err) return reject(err);
+          resolve();
+        });
       });
 
+      req.flash('success', 'Admin registered Successfully, Welcome to Admin Interface');
+      res.redirect('/admin');
+
     } catch (err) {
-      req.flash('error', "User or email already exist.");
-      res.redirect('/signup');
+      req.flash('error', "Email or Username already exists.");
+      res.redirect('/admin/signup');  // fixed path
     }
   })
 );
+
+
+
 
 module.exports = router;

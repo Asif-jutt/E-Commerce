@@ -8,14 +8,14 @@
           <i class="fas fa-lock"></i>
         </div>
         <% if(rout=='/admin'){ %>
-        <h2>Admin Sign In</h2>
+        <h2>Customer Sign In</h2>
         <% } else{%>
         <h2>Customer Sign In</h2>
           <% } %>
         <p>Enter your credentials to access the dashboard</p>
       </div>
       
-      <form class="signin-form" action="<%= rout %>/signin" method="POST">
+      <form class="signin-form" action="/user/signin" method="POST">
         <div class="form-group">
           <label for="username">Username</label>
           <div class="input-with-icon">
@@ -48,7 +48,7 @@
       </form>
       
       <div class="signin-footer">
-        <p>Don't have an account? <a href="/admin/signup" class="signup-link">Sign Up</a></p>
+        <p>Don't have an account? <a href="/user/signup" class="signup-link">Sign Up</a></p>
       </div>
     </div>
   </div>

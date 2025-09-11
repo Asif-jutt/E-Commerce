@@ -4,8 +4,10 @@ const asyncwrap = require('../init/asyncwrap');
 const { Product } = require('../init/index');
 const { Customer } = require('../init/customer');
 const islogin = require('../init/isloginadmin');
+const {onlyAdmin} = require('../init/isloginadmin');
+
 router.get(
-  '/admin',islogin,
+  '/admin',islogin,onlyAdmin,
   asyncwrap(async (req, res) => {
     const totalorder = await order();
     const count = await countproduct();

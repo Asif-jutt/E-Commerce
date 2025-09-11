@@ -5,17 +5,17 @@ const { Admin } = require('../init/adminuser');
 const passport = require('passport');
 const {setUrl} = require('../init/isloginadmin');
 router.get(
-  '/signin',
+  `/admin/signin`,
   asyncwrap(async (req, res) => {
     res.render('siginin');
   })
 );
 
 router.post(
-  '/signin',
+  '/admin/signin',
     setUrl,
-     passport.authenticate('local', {
-    failureRedirect: '/signin',
+     passport.authenticate('admin-local', {
+    failureRedirect: '/admin/signin',
     failureFlash : true
   }),
   asyncwrap(async (req, res) => {
@@ -31,6 +31,6 @@ router.post('/logout', (req, res, next) => {
     res.redirect('/admin');
   });
 });
-
+  
 
 module.exports = router;

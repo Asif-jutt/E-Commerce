@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-
-router.get('/user', (req, res) => {
+const islogin = require('../init/isloginadmin');
+const { onlyUser }  = require('../init/isloginadmin');
+router.get('/user',islogin,onlyUser, (req, res) => {
   res.render('customer');
 })
 

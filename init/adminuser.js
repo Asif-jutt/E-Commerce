@@ -1,14 +1,19 @@
 const mongoose = require('mongoose');
-const { Schema } = require('mongoose');
-const products = require('./product.js');
-const passportlocalMongoose = require('passport-local-mongoose');
-const adminschema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-  },
-  
+const passportLocalMongoose = require('passport-local-mongoose');
+
+// Admin schema
+const adminSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
 });
-adminschema.plugin(passportlocalMongoose);
-const Admin = new mongoose.model("Admin", adminschema);
-module.exports = { Admin };
+adminSchema.plugin(passportLocalMongoose);
+
+// User schema
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+});
+userSchema.plugin(passportLocalMongoose);
+
+const Admin = mongoose.model("Admin", adminSchema);
+const User = mongoose.model("User", userSchema);
+
+module.exports = { Admin, User };

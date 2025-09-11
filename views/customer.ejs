@@ -1,668 +1,989 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Tracking - MyShop</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Shop - Customer Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
-        :root {
-            --primary: #3a0ca3;
-            --secondary: #4361ee;
-            --accent: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4cc9f0;
-            --text: #2b2d42;
-            --gray: #6c757d;
-            --transition: all 0.3s ease;
-            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            --radius: 10px;
+      :root {
+        --primary: #3a0ca3;
+        --secondary: #4361ee;
+        --accent: #f72585;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --success: #4cc9f0;
+        --text: #2b2d42;
+        --gray: #6c757d;
+        --transition: all 0.3s ease;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        --radius: 10px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: #f9f9f9;
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      /* Navbar */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--dark);
+        color: white;
+        padding: 15px 50px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .navbar.scrolled {
+        padding: 10px 50px;
+      }
+
+      .navbar .logo {
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-icon {
+        color: var(--accent);
+        font-size: 32px;
+      }
+
+      .navbar ul {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+      }
+
+      .navbar ul li {
+        margin-left: 20px;
+        position: relative;
+      }
+
+      .navbar ul li a {
+        text-decoration: none;
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+        transition: var(--transition);
+        padding: 8px 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .navbar ul li a:hover {
+        color: var(--accent);
+      }
+
+      .navbar ul li a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background: var(--accent);
+        transition: var(--transition);
+      }
+
+      .navbar ul li a:hover::after {
+        width: 100%;
+      }
+
+      .nav-cta {
+        background: var(--accent);
+        padding: 10px 20px;
+        border-radius: 30px;
+        margin-left: 15px;
+        transition: var(--transition);
+      }
+
+      .nav-cta:hover {
+        background: #d81159;
+        transform: translateY(-3px);
+      }
+
+      .nav-auth {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-left: 20px;
+      }
+
+      .nav-auth a {
+        padding: 8px 15px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+      }
+
+      .nav-signin {
+        color: white;
+        border: 1px solid var(--accent);
+      }
+
+      .nav-signin:hover {
+        background: var(--accent);
+      }
+
+      .nav-signup {
+        background: var(--success);
+        color: white;
+      }
+
+      .nav-signup:hover {
+        background: #3aa5d3;
+        transform: translateY(-3px);
+      }
+
+      /* Mobile menu */
+      .menu-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 30px;
+        height: 25px;
+        cursor: pointer;
+      }
+
+      .menu-toggle span {
+        width: 100%;
+        height: 3px;
+        background: white;
+        border-radius: 5px;
+        transition: var(--transition);
+      }
+
+      /* Push content below navbar */
+      main {
+        min-height: 70vh;
+        padding: 120px 50px 40px; /* top padding = navbar height + spacing */
+      }
+
+      /* Dashboard Layout */
+      .dashboard-container {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 30px;
+        margin-bottom: 60px;
+      }
+
+      /* Sidebar */
+      .dashboard-sidebar {
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 30px;
+        height: fit-content;
+      }
+
+      .user-profile {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .user-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border: 3px solid var(--secondary);
+      }
+
+      .user-profile h3 {
+        margin-bottom: 5px;
+        color: var(--primary);
+      }
+
+      .user-profile p {
+        color: var(--gray);
+        font-size: 14px;
+      }
+
+      .sidebar-menu {
+        list-style: none;
+      }
+
+      .sidebar-menu li {
+        margin: 15px 0;
+      }
+
+      .sidebar-menu a {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 500;
+        padding: 12px 15px;
+        border-radius: var(--radius);
+        transition: var(--transition);
+      }
+
+      .sidebar-menu a:hover,
+      .sidebar-menu a.active {
+        background: var(--secondary);
+        color: white;
+      }
+
+      .sidebar-menu i {
+        width: 20px;
+        text-align: center;
+      }
+
+      /* Dashboard Content */
+      .dashboard-content {
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 30px;
+      }
+
+      .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .dashboard-header h2 {
+        color: var(--primary);
+      }
+
+      .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: var(--light);
+        padding: 20px;
+        border-radius: var(--radius);
+        text-align: center;
+        transition: var(--transition);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+      }
+
+      .stat-icon {
+        font-size: 30px;
+        color: var(--secondary);
+        margin-bottom: 15px;
+      }
+
+      .stat-card h3 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        color: var(--primary);
+      }
+
+      .stat-card p {
+        color: var(--gray);
+      }
+
+      .recent-activity {
+        margin-bottom: 30px;
+      }
+
+      .activity-list {
+        list-style: none;
+      }
+
+      .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+
+      .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--secondary);
+      }
+
+      .activity-content {
+        flex: 1;
+      }
+
+      .activity-content h4 {
+        margin-bottom: 5px;
+      }
+
+      .activity-content p {
+        color: var(--gray);
+        font-size: 14px;
+      }
+
+      .activity-time {
+        color: var(--gray);
+        font-size: 12px;
+      }
+
+      /* Footer */
+      footer {
+        background: var(--dark);
+        color: #ddd;
+        padding: 70px 50px 30px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+      }
+
+      footer h3 {
+        color: var(--accent);
+        margin-bottom: 20px;
+        font-size: 20px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      footer h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: var(--accent);
+      }
+
+      footer p {
+        line-height: 1.8;
+      }
+
+      .footer-links ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .footer-links ul li {
+        margin: 15px 0;
+      }
+
+      .footer-links ul li a {
+        text-decoration: none;
+        color: #bbb;
+        font-size: 16px;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .footer-links ul li a i {
+        color: var(--accent);
+      }
+
+      .footer-links ul li a:hover {
+        color: white;
+        transform: translateX(5px);
+      }
+
+      .footer-contact p {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 15px 0;
+      }
+
+      .footer-contact i {
+        color: var(--accent);
+        font-size: 18px;
+      }
+
+      .footer-newsletter input {
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      .footer-newsletter button {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 5px;
+        width: 100%;
+        cursor: pointer;
+        font-weight: bold;
+        transition: var(--transition);
+      }
+
+      .footer-newsletter button:hover {
+        background: #d81159;
+      }
+
+      .social-icons {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .social-icons a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: #333;
+        border-radius: 50%;
+        color: white;
+        transition: var(--transition);
+      }
+
+      .social-icons a:hover {
+        background: var(--accent);
+        transform: translateY(-5px);
+      }
+
+      .footer-bottom {
+        text-align: center;
+        background: #111;
+        padding: 20px;
+        color: #aaa;
+        font-size: 15px;
+        margin-top: 50px;
+        grid-column: 1 / -1;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1200px) {
+        .navbar ul li {
+          margin-left: 15px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        .nav-auth {
+          margin-left: 10px;
+          gap: 10px;
         }
+      }
 
-        body {
-            background: #f9f9f9;
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Navbar */
+      @media (max-width: 992px) {
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--dark);
-            color: white;
-            padding: 15px 50px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
+          padding: 15px 30px;
         }
 
-        .navbar.scrolled {
-            padding: 10px 50px;
+        main {
+          padding: 120px 30px 40px;
         }
 
-        .navbar .logo {
-            font-size: 28px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .dashboard-container {
+          grid-template-columns: 1fr;
         }
 
-        .logo-icon {
-            color: var(--accent);
-            font-size: 32px;
+        .dashboard-sidebar {
+          order: 2;
         }
 
-        .navbar ul {
-            list-style: none;
-            display: flex;
-            margin: 0;
-            padding: 0;
+        .dashboard-content {
+          order: 1;
         }
 
         .navbar ul li {
-            margin-left: 30px;
-            position: relative;
+          margin-left: 10px;
         }
 
         .navbar ul li a {
-            text-decoration: none;
-            color: white;
-            font-size: 16px;
-            font-weight: 500;
-            transition: var(--transition);
-            padding: 8px 5px;
+          font-size: 14px;
         }
 
-        .navbar ul li a:hover {
-            color: var(--accent);
+        .nav-auth a {
+          padding: 6px 12px;
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 868px) {
+        .navbar ul:not(.nav-auth) {
+          display: none;
+          flex-direction: column;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background: var(--dark);
+          padding: 20px;
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .navbar ul li a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: var(--accent);
-            transition: var(--transition);
+        .navbar ul.active {
+          display: flex;
         }
 
-        .navbar ul li a:hover::after {
-            width: 100%;
+        .navbar ul li {
+          margin: 15px 0;
         }
 
-        .nav-cta {
-            background: var(--accent);
-            padding: 10px 20px;
-            border-radius: 30px;
-            margin-left: 30px;
-            transition: var(--transition);
+        .menu-toggle {
+          display: flex;
         }
 
-        .nav-cta:hover {
-            background: #d81159;
-            transform: translateY(-3px);
+        .nav-auth {
+          display: none;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .navbar {
+          padding: 12px 20px;
         }
 
-        /* Main Content */
         main {
-            min-height: 70vh;
-            padding: 120px 50px 40px;
+          padding: 100px 20px 30px;
         }
 
-        .user-panel {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            margin-top: 30px;
+        .stats-cards {
+          grid-template-columns: 1fr;
         }
 
-        .auth-box {
-            background: white;
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
+        .dashboard-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
         }
+      }
+      .logout-btn {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
 
-        .orders-panel {
-            background: white;
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            display: none;
-        }
+      .logout-btn:hover {
+        background: linear-gradient(135deg, #2563eb, #1e40af);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+      }
 
-        .section-title {
-            font-size: 24px;
-            color: var(--primary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--light);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: var(--radius);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--secondary);
-        }
-
-        .btn {
-            background: var(--secondary);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: var(--radius);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-block;
-        }
-
-        .btn:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .btn-accent {
-            background: var(--accent);
-        }
-
-        .btn-accent:hover {
-            background: #d81159;
-        }
-
-        .user-welcome {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .user-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--secondary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin-right: 15px;
-        }
-
-        .welcome-text h3 {
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        .welcome-text p {
-            color: var(--gray);
-        }
-
-        .order-filters {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 8px 15px;
-            background: var(--light);
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .filter-btn.active, .filter-btn:hover {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .orders-list {
-            margin-top: 20px;
-        }
-
-        .order-card {
-            border: 1px solid #eee;
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: var(--transition);
-        }
-
-        .order-card:hover {
-            box-shadow: var(--shadow);
-            transform: translateY(-3px);
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .order-id {
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .order-date {
-            color: var(--gray);
-            font-size: 14px;
-        }
-
-        .order-status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .status-delivered {
-            background: #e6f7ee;
-            color: #0cb178;
-        }
-
-        .status-processing {
-            background: #e6f0ff;
-            color: #3a0ca3;
-        }
-
-        .status-shipped {
-            background: #fff4e6;
-            color: #f90;
-        }
-
-        .status-cancelled {
-            background: #ffe6e6;
-            color: #f00;
-        }
-
-        .order-details {
-            display: grid;
-            grid-template-columns: 80px 1fr auto;
-            gap: 15px;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .product-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: #f5f5f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ccc;
-        }
-
-        .product-info h4 {
-            margin-bottom: 5px;
-            color: var(--dark);
-        }
-
-        .product-info p {
-            color: var(--gray);
-            font-size: 14px;
-        }
-
-        .product-price {
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .order-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-
-        .order-total {
-            font-weight: bold;
-            color: var(--dark);
-        }
-
-        .order-actions .btn {
-            padding: 8px 15px;
-            font-size: 14px;
-        }
-
-        .no-orders {
-            text-align: center;
-            padding: 40px 0;
-            color: var(--gray);
-        }
-
-        .no-orders i {
-            font-size: 50px;
-            margin-bottom: 15px;
-            color: #ddd;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .user-panel {
-                grid-template-columns: 1fr;
-            }
-            
-            .navbar {
-                padding: 15px 30px;
-            }
-
-            main {
-                padding: 120px 30px 40px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .order-details {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .order-header, .order-footer {
-                flex-direction: column;
-                gap: 10px;
-                align-items: flex-start;
-            }
-            
-            .navbar ul {
-                display: none;
-            }
-        }
+      .logout-btn i {
+        font-size: 16px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="logo">
-            <i class="fas fa-store logo-icon"></i>
-            <span>MyShop</span>
-        </div>
-        <ul>
-            <li>
-                <a href="/"><i class="fas fa-home"></i> Home</a>
-            </li>
-            <li>
-                <a href="/products"><i class="fas fa-shopping-bag"></i> Products</a>
-            </li>
-            <li>
-                <a href="/about"><i class="fas fa-info-circle"></i> About</a>
-            </li>
-            <li>
-                <a href="/user" class="nav-cta"><i class="fas fa-user"></i> My Account</a>
-            </li>
-        </ul>
-    </nav>
+      <div class="logo">
+        <i class="fas fa-store logo-icon"></i>
+        <span>MyShop</span>
+      </div>
+      <div class="menu-toggle" id="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <ul id="nav-menu">
+        <li>
+          <a href="/"><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li>
+          <a href="/products"><i class="fas fa-shopping-bag"></i> Products</a>
+        </li>
+        <li>
+          <a href="/user" class="active"
+            ><i class="fas fa-user"></i> Customer</a
+          >
+        </li>
+        <li>
+          <a href="/admin"><i class="fas fa-user-cog"></i> Admin</a>
+        </li>
+        <li>
+          <a href="#contact" class="nav-cta"
+            ><i class="fas fa-phone-alt"></i> Contact Us</a
+          >
+        </li>
+      </ul>
+      <div class="nav-auth">
+        <% if(isAuthenticated) {%>
+        <form action="/userlogout" method="POST" style="display: inline">
+          <button type="submit" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </form>
 
-    <!-- Main Content -->
+        <% } else{%>
+        <a href="/user/signin" class="nav-signin"
+          ><i class="fas fa-sign-in-alt"></i> Sign In</a
+        >
+        <a href="/user/signup" class="nav-signup"
+          ><i class="fas fa-user-plus"></i> Sign Up</a
+        >
+        <% } %>
+      </div>
+    </nav>
+    <!-- Page Content -->
     <main>
-        <div class="container">
-            <h1 class="section-title">Order Tracking</h1>
-            <p>Enter your details to view your order history and track recent purchases</p>
-            
-            <div class="user-panel">
-                <div class="auth-box">
-                    <h2 class="section-title">Sign In</h2>
-                    <form id="userAuthForm">
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" class="form-control" placeholder="Your email address" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="username" class="form-control" placeholder="Your username" required>
-                        </div>
-                        <button type="submit" class="btn btn-accent">View My Orders</button>
-                    </form>
-                </div>
-                
-                <div class="orders-panel" id="ordersPanel">
-                    <div class="user-welcome">
-                        <div class="user-avatar" id="userAvatar">JD</div>
-                        <div class="welcome-text">
-                            <h3 id="welcomeName">Welcome, John Doe!</h3>
-                            <p>Here's your order history</p>
-                        </div>
-                    </div>
-                    
-                    <div class="order-filters">
-                        <button class="filter-btn active">All Orders</button>
-                        <button class="filter-btn">Processing</button>
-                        <button class="filter-btn">Shipped</button>
-                        <button class="filter-btn">Delivered</button>
-                    </div>
-                    
-                    <div class="orders-list" id="ordersList">
-                        <!-- Orders will be populated here by JavaScript -->
-                    </div>
-                </div>
+       <%- include('./flash.ejs') %>
+
+      <!-- Dashboard Section -->
+      <section class="dashboard">
+        <div class="dashboard-container">
+          <!-- Sidebar -->
+          <aside class="dashboard-sidebar">
+            <div class="user-profile">
+              <img
+                src="https://randomuser.me/api/portraits/men/32.jpg"
+                alt="User"
+                class="user-avatar"
+              />
+              <h3><%= user %></h3>
+              <h4><%= email %></h4>
+              <p>Premium Member</p>
             </div>
+
+            <ul class="sidebar-menu">
+              <li>
+                <a href="#" class="active"
+                  ><i class="fas fa-home"></i> Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="#"><i class="fas fa-shopping-cart"></i> Orders</a>
+              </li>
+              <li>
+                <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
+              </li>
+              <li>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Addresses</a>
+              </li>
+              <li>
+                <a href="#"><i class="fas fa-user"></i> Profile</a>
+              </li>
+              <li>
+                <a href="#"
+                  ><i class="fas fa-credit-card"></i> Payment Methods</a
+                >
+              </li>
+              <li>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+              </li>
+              <li>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+              </li>
+            </ul>
+          </aside>
+
+          <!-- Main Content -->
+          <div class="dashboard-content">
+            <div class="dashboard-header">
+              <h2>Customer Dashboard</h2>
+              <button class="nav-cta">
+                <i class="fas fa-shopping-cart"></i> Continue Shopping
+              </button>
+            </div>
+
+            <div class="stats-cards">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+                <h3>5</h3>
+                <p>Total Orders</p>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-heart"></i>
+                </div>
+                <h3>12</h3>
+                <p>Wishlist Items</p>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-tag"></i>
+                </div>
+                <h3>3</h3>
+                <p>Active Coupons</p>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-star"></i>
+                </div>
+                <h3>128</h3>
+                <p>Reward Points</p>
+              </div>
+            </div>
+
+            <div class="recent-activity">
+              <h3>Recent Activity</h3>
+              <ul class="activity-list">
+                <li class="activity-item">
+                  <div class="activity-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                  </div>
+                  <div class="activity-content">
+                    <h4>Order Placed</h4>
+                    <p>Your order #12345 has been placed successfully</p>
+                  </div>
+                  <div class="activity-time">2 hours ago</div>
+                </li>
+
+                <li class="activity-item">
+                  <div class="activity-icon">
+                    <i class="fas fa-truck"></i>
+                  </div>
+                  <div class="activity-content">
+                    <h4>Order Shipped</h4>
+                    <p>Your order #12340 has been shipped</p>
+                  </div>
+                  <div class="activity-time">1 day ago</div>
+                </li>
+
+                <li class="activity-item">
+                  <div class="activity-icon">
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <div class="activity-content">
+                    <h4>Product Review</h4>
+                    <p>You reviewed "Wireless Headphones"</p>
+                  </div>
+                  <div class="activity-time">2 days ago</div>
+                </li>
+
+                <li class="activity-item">
+                  <div class="activity-icon">
+                    <i class="fas fa-gift"></i>
+                  </div>
+                  <div class="activity-content">
+                    <h4>Reward Earned</h4>
+                    <p>You earned 25 points for your recent purchase</p>
+                  </div>
+                  <div class="activity-time">3 days ago</div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="recent-orders">
+              <h3>Recent Orders</h3>
+              <div class="table-responsive">
+                <table style="width: 100%; border-collapse: collapse">
+                  <thead>
+                    <tr style="background: var(--light)">
+                      <th style="padding: 15px; text-align: left">Order ID</th>
+                      <th style="padding: 15px; text-align: left">Date</th>
+                      <th style="padding: 15px; text-align: left">Status</th>
+                      <th style="padding: 15px; text-align: left">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom: 1px solid #eee">
+                      <td style="padding: 15px">#12345</td>
+                      <td style="padding: 15px">Oct 15, 2023</td>
+                      <td style="padding: 15px">
+                        <span
+                          style="
+                            background: #4cc9f0;
+                            color: white;
+                            padding: 5px 10px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                          "
+                          >Processing</span
+                        >
+                      </td>
+                      <td style="padding: 15px">$129.99</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee">
+                      <td style="padding: 15px">#12340</td>
+                      <td style="padding: 15px">Oct 12, 2023</td>
+                      <td style="padding: 15px">
+                        <span
+                          style="
+                            background: #4361ee;
+                            color: white;
+                            padding: 5px 10px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                          "
+                          >Shipped</span
+                        >
+                      </td>
+                      <td style="padding: 15px">$89.99</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee">
+                      <td style="padding: 15px">#12335</td>
+                      <td style="padding: 15px">Oct 5, 2023</td>
+                      <td style="padding: 15px">
+                        <span
+                          style="
+                            background: #3a0ca3;
+                            color: white;
+                            padding: 5px 10px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                          "
+                          >Delivered</span
+                        >
+                      </td>
+                      <td style="padding: 15px">$249.99</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
     </main>
 
+    <!-- Footer -->
+    <footer>
+      <div class="footer-about">
+        <h3>About Us</h3>
+        <p>
+          Your one-stop shop for the best products online. We're committed to
+          offering quality products and exceptional service that's guaranteed to
+          satisfy.
+        </p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-pinterest"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li>
+            <a href="/"><i class="fas fa-chevron-right"></i> Home</a>
+          </li>
+          <li>
+            <a href="/products"
+              ><i class="fas fa-chevron-right"></i> Products</a
+            >
+          </li>
+          <li>
+            <a href="/user"><i class="fas fa-chevron-right"></i> Customer</a>
+          </li>
+          <li>
+            <a href="/admin"
+              ><i class="fas fa-chevron-right"></i> Admin Panel</a
+            >
+          </li>
+          <li>
+            <a href="#contact"
+              ><i class="fas fa-chevron-right"></i> Contact Us</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h3>Contact Info</h3>
+        <p><i class="fas fa-envelope"></i> support@myshop.com</p>
+        <p><i class="fas fa-phone"></i> +123 456 7890</p>
+        <p><i class="fas fa-map-marker-alt"></i> Lahore, Pakistan</p>
+        <p><i class="fas fa-clock"></i> Mon-Sat: 9AM - 6PM</p>
+      </div>
+      <div class="footer-newsletter">
+        <h3>Newsletter</h3>
+        <p>
+          Subscribe to our newsletter for updates on new products and special
+          offers.
+        </p>
+        <form action="/sub" method="get">
+          <input
+            type="email"
+            name="email"
+            placeholder="Your email address"
+            required
+          />
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+      <div class="footer-bottom">&copy; 2025 MyShop | All Rights Reserved</div>
+    </footer>
+
     <script>
-        // Sample order data
-        const sampleOrders = [
-            {
-                id: "ORD-12345",
-                date: "2023-10-15",
-                status: "delivered",
-                products: [
-                    {
-                        name: "Wireless Bluetooth Headphones",
-                        description: "Noise cancelling with 20hr battery",
-                        price: 89.99,
-                        quantity: 1
-                    },
-                    {
-                        name: "Phone Case",
-                        description: "Premium protective case",
-                        price: 24.99,
-                        quantity: 1
-                    }
-                ],
-                total: 114.98
-            },
-            {
-                id: "ORD-12346",
-                date: "2023-10-10",
-                status: "shipped",
-                products: [
-                    {
-                        name: "Smart Watch Series 5",
-                        description: "Advanced health monitoring",
-                        price: 199.99,
-                        quantity: 1
-                    }
-                ],
-                total: 199.99
-            },
-            {
-                id: "ORD-12347",
-                date: "2023-10-05",
-                status: "processing",
-                products: [
-                    {
-                        name: "Running Shoes",
-                        description: "Size 10, Color: Black",
-                        price: 129.99,
-                        quantity: 1
-                    },
-                    {
-                        name: "Sports Socks",
-                        description: "3 pairs pack",
-                        price: 15.99,
-                        quantity: 2
-                    }
-                ],
-                total: 161.97
-            }
-        ];
+      // Mobile menu toggle
+      const mobileMenu = document.getElementById('mobile-menu');
+      const navMenu = document.getElementById('nav-menu');
 
-        // DOM elements
-        const authForm = document.getElementById('userAuthForm');
-        const ordersPanel = document.getElementById('ordersPanel');
-        const ordersList = document.getElementById('ordersList');
-        const userAvatar = document.getElementById('userAvatar');
-        const welcomeName = document.getElementById('welcomeName');
+      mobileMenu.addEventListener('click', function () {
+        navMenu.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+      });
 
-        // Form submission handler
-        authForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const username = document.getElementById('username').value;
-            
-            // In a real application, you would verify these credentials with your backend
-            // For this demo, we'll just show the orders panel with sample data
-            
-            // Show the orders panel
-            ordersPanel.style.display = 'block';
-            
-            // Set user info
-            const initials = username.split(' ').map(n => n[0]).join('').toUpperCase();
-            userAvatar.textContent = initials;
-            welcomeName.textContent = `Welcome, ${username}!`;
-            
-            // Display orders
-            displayOrders(sampleOrders);
-        });
-
-        // Function to display orders
-        function displayOrders(orders) {
-            ordersList.innerHTML = '';
-            
-            if (orders.length === 0) {
-                ordersList.innerHTML = `
-                    <div class="no-orders">
-                        <i class="fas fa-box-open"></i>
-                        <h3>No orders found</h3>
-                        <p>You haven't placed any orders yet</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            orders.forEach(order => {
-                const orderElement = document.createElement('div');
-                orderElement.className = 'order-card';
-                
-                // Format order date
-                const orderDate = new Date(order.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                
-                // Status class
-                const statusClass = `status-${order.status}`;
-                
-                // Products list
-                let productsHTML = '';
-                order.products.forEach(product => {
-                    productsHTML += `
-                        <div class="order-details">
-                            <div class="product-image">
-                                <i class="fas fa-image"></i>
-                            </div>
-                            <div class="product-info">
-                                <h4>${product.name}</h4>
-                                <p>${product.description}</p>
-                            </div>
-                            <div class="product-price">$${product.price.toFixed(2)} x ${product.quantity}</div>
-                        </div>
-                    `;
-                });
-                
-                orderElement.innerHTML = `
-                    <div class="order-header">
-                        <div>
-                            <div class="order-id">Order #${order.id}</div>
-                            <div class="order-date">Placed on ${orderDate}</div>
-                        </div>
-                        <div class="order-status ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</div>
-                    </div>
-                    ${productsHTML}
-                    <div class="order-footer">
-                        <div class="order-total">Total: $${order.total.toFixed(2)}</div>
-                        <div class="order-actions">
-                            <button class="btn">View Details</button>
-                            <button class="btn">Track Order</button>
-                        </div>
-                    </div>
-                `;
-                
-                ordersList.appendChild(orderElement);
-            });
+      // Navbar scroll effect
+      window.addEventListener('scroll', function () {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
         }
+      });
 
-        // Filter buttons functionality
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        filterButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                // In a real app, you would filter orders based on the selected status
-                // For this demo, we'll just show all orders
-                displayOrders(sampleOrders);
-            });
+      // Simple dashboard interaction
+      document.querySelectorAll('.sidebar-menu a').forEach((item) => {
+        item.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelectorAll('.sidebar-menu a').forEach((link) => {
+            link.classList.remove('active');
+          });
+          this.classList.add('active');
         });
+      });
     </script>
-</body>
+  </body>
 </html>
