@@ -19,7 +19,6 @@ router.get(
 );
 
 
-
 router.get(
   '/admin/delete/:id',islogin,
   asyncwrap(async (req, res) => {
@@ -28,7 +27,20 @@ router.get(
     res.redirect('/admin');
   })
 );
-// 
+// coustomer and their orders
+router.get('/admin/customer', islogin, asyncwrap(async (req, res, next) => {
+  const orders = await Order.find()
+    .populate('userId', 'username email')   // fetch customer details
+    .populate('products.productId', 'item price image'); // fetch product details
+  res.render('customerorders', { orders });
+}));
+
+// reg user
+router.get('/admin/reguser',islogin, asyncwrap(async (req, res, next) => {
+  const user = await Customer.find();
+  res.render('reguser',{user});
+}))
+
 
 async function order() {
   return await Order.countDocuments();
