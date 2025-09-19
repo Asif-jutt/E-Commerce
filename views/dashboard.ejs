@@ -584,7 +584,7 @@
       </div>
       <div class="footer-contact">
         <h3>Contact Info</h3>
-        <p><i class="fas fa-envelope"></i> support@myshop.com</p>
+        <p><i class="fas fa-envelope"></i> asifhussain295@myshop.com</p>
         <p><i class="fas fa-phone"></i> +123 456 7890</p>
         <p><i class="fas fa-map-marker-alt"></i> Lahore, Pakistan</p>
         <p><i class="fas fa-clock"></i> Mon-Sat: 9AM - 6PM</p>
@@ -595,8 +595,10 @@
           Subscribe to our newsletter for updates on new products and special
           offers.
         </p>
-        <input type="email" placeholder="Enter your email" />
-        <button>Subscribe</button>
+        <form action="/sub" method="get">
+          <input type="email" name="email" placeholder="Your email address" required />
+          <button type="submit">Subscribe</button>
+        </form>
       </div>
       <div class="footer-bottom">&copy; 2025 MyShop | All Rights Reserved</div>
     </footer>

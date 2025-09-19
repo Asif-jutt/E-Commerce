@@ -26,6 +26,7 @@ const defaultroute = require('./routes/defaultroute.js');
 const subroute = require('./routes/subroute.js');
 const webcookie = require('./web_cookie/cookie.js');
 const userroute = require('./routes/userrouter.js');
+const orderroute = require('./routes/order.js');
 
 const sessionOption = {
   secret: "Mynameisasifhussain",
@@ -48,8 +49,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB connection
 async function main() {
-  await mongoose.connect(process.env.MONGO_URI);
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 30000 // optional, increases timeout
+    });
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+  }
 }
+
+main();
+
 main()
   .then(() => console.log('Connection is built...'))
   .catch((err) => console.log(err));
@@ -98,7 +109,8 @@ app.use((req, res, next) => {
   
   if (req.user) {
     res.locals.user = req.user.username;
-    res.locals.email = req.user.email;
+    res.locals.user = req.user.username;
+    res.locals.id = req.user._id;
   } else {
     res.locals.user = null;
     res.locals.email = null;
@@ -120,6 +132,7 @@ app.use('/', cartroute);
 app.use('/', customerroute);
 app.use('/', contactroute);
 app.use('/', userroute);
+app.use('/', orderroute);
 app.use('/', subroute);
 app.use('/', webcookie);
 app.use('/', defaultroute);

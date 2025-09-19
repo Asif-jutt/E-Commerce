@@ -726,7 +726,7 @@
             <div class="dashboard-header">
               <h2>Customer Dashboard</h2>
               <button class="nav-cta">
-                <i class="fas fa-shopping-cart"></i> Continue Shopping
+                <a href="/products" style="text-decoration: none;"><i class="fas fa-shopping-cart"></i> Continue Shopping</a>
               </button>
             </div>
 
@@ -735,7 +735,7 @@
                 <div class="stat-icon">
                   <i class="fas fa-shopping-bag"></i>
                 </div>
-                <h3>5</h3>
+                <h3><%= orders.length %></h3>
                 <p>Total Orders</p>
               </div>
 
@@ -822,13 +822,15 @@
                       <th style="padding: 15px; text-align: left">Order ID</th>
                       <th style="padding: 15px; text-align: left">Date</th>
                       <th style="padding: 15px; text-align: left">Status</th>
+                      <th style="padding: 15px; text-align: left">Delivery Addree</th>
                       <th style="padding: 15px; text-align: left">Total</th>
                     </tr>
                   </thead>
                   <tbody>
+                  <% orders.forEach(order => { %>
                     <tr style="border-bottom: 1px solid #eee">
-                      <td style="padding: 15px">#12345</td>
-                      <td style="padding: 15px">Oct 15, 2023</td>
+                      <td style="padding: 15px"><a href="order/<%= order._id %>" style="text-decoration: none;"><%= order._id %></td></a>
+                      <td style="padding: 15px"><%= new Date().toLocaleString() %></td>
                       <td style="padding: 15px">
                         <span
                           style="
@@ -838,45 +840,15 @@
                             border-radius: 20px;
                             font-size: 12px;
                           "
-                          >Processing</span
+                          ><%= order.status %></span
                         >
-                      </td>
-                      <td style="padding: 15px">$129.99</td>
+                      </td>                     
+                       <td style="padding: 15px"><%= order.deliveryAddress %></td>
+
+                      <td style="padding: 15px"><%= order.totalAmount %></td>
                     </tr>
-                    <tr style="border-bottom: 1px solid #eee">
-                      <td style="padding: 15px">#12340</td>
-                      <td style="padding: 15px">Oct 12, 2023</td>
-                      <td style="padding: 15px">
-                        <span
-                          style="
-                            background: #4361ee;
-                            color: white;
-                            padding: 5px 10px;
-                            border-radius: 20px;
-                            font-size: 12px;
-                          "
-                          >Shipped</span
-                        >
-                      </td>
-                      <td style="padding: 15px">$89.99</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #eee">
-                      <td style="padding: 15px">#12335</td>
-                      <td style="padding: 15px">Oct 5, 2023</td>
-                      <td style="padding: 15px">
-                        <span
-                          style="
-                            background: #3a0ca3;
-                            color: white;
-                            padding: 5px 10px;
-                            border-radius: 20px;
-                            font-size: 12px;
-                          "
-                          >Delivered</span
-                        >
-                      </td>
-                      <td style="padding: 15px">$249.99</td>
-                    </tr>
+                    <%  })%>
+                   
                   </tbody>
                 </table>
               </div>
@@ -885,6 +857,8 @@
         </div>
       </section>
     </main>
+<ul>
+ 
 
     <!-- Footer -->
     <footer>

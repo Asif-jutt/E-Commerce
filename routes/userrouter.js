@@ -50,6 +50,8 @@ router.post(
   }),
   asyncwrap(async (req, res) => {
     req.flash('success', 'Wellcome to E-Commerce as user ,' + req.user.username);
+    console.log(req.user);
+    res.locals.curuser = req.user;
     let urlredirect = res.locals.Urlredirect || "/user";
     res.redirect(urlredirect);
   })

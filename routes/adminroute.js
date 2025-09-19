@@ -5,6 +5,8 @@ const { Product } = require('../init/index');
 const { Customer } = require('../init/customer');
 const islogin = require('../init/isloginadmin');
 const {onlyAdmin} = require('../init/isloginadmin');
+const {Order} = require('../init/order');
+
 
 router.get(
   '/admin',islogin,onlyAdmin,
@@ -29,7 +31,7 @@ router.get(
 // 
 
 async function order() {
-  return await Customer.countDocuments();
+  return await Order.countDocuments();
 }
 
 async function countproduct() {

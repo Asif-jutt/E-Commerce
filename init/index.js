@@ -11,15 +11,8 @@ const ProductSchema = new Schema({
   reviews: [{ type: Schema.Types.ObjectId, ref:'Review' }]
 });
 
-const CartSchema = new Schema({
-  item: { type: String, required: true },
-  price: { type: Number, required: true },
-  stock: { type: Number, required: true },
-  image: { type: String, required: true }
-});
 
 const Product = mongoose.model('Product', ProductSchema);
-const Cart = mongoose.model('Cart', CartSchema);
 
 // async function addproduct() {
 //   try {
@@ -30,4 +23,4 @@ const Cart = mongoose.model('Cart', CartSchema);
 //   }
 // }
 
-module.exports = { Product, Cart };
+module.exports = { Product };

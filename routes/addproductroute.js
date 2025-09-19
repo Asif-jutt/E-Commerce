@@ -24,7 +24,7 @@ router.post(
 router.get(
   '/',
   asyncwrap(async (req, res) => {
-    res.render('main');
+    res.render('dashboard');
   })
 );
 module.exports = router;
